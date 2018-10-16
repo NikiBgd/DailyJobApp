@@ -1,0 +1,146 @@
+﻿@using DailyJobStarterPack.DataBaseObjects
+@using DailyJob.Helpers
+@using DailyJobStarterPack.Web.ViewModels.Security
+
+@model  Creation
+
+@{
+    var shouldOpenPop = ViewData.ContainsKey("isSuccessful");
+    var isSuccessful = false;
+    if (shouldOpenPop)
+    {
+        isSuccessful = (bool)ViewData["isSuccessful"];
+    }
+}
+
+<div class="row" style="margin-bottom: 50px; margin-top: 50px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Izmena podataka potencijalnog osnivanja</h4>
+                <div class="row">
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("UpdateCreation", "Creations", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <input name="CreationId" value="@Model.CreationId" style="display:none" />
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="Name">Ime</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-user">
+                                        </i>
+                                    </div>
+                                    <input id="Name" name="Name" type="text" class="form-control input-md" value="@Model.Name" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="Mail">Mail</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-birthday-cake">
+                                        </i>
+                                    </div>
+                                    <input id="Mail" name="Mail" type="text" class="form-control input-md" value="@Model.Mail" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="PhoneNumber">Telefon</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-birthday-cake">
+                                        </i>
+                                    </div>
+                                    <input id="PhoneNumber" name="PhoneNumber" type="text" class="form-control input-md" value="@Model.PhoneNumber" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="JobType">Opis posla</label>
+                            <div class="col-md-4">
+                                @foreach (var service in SessionData.Services)
+                                {
+                                    int i = 0;
+                                    i = i + 1;
+                                    <label class="radio" for="JobType-@service.ServiceId">
+                                        <input type="radio" name="JobType" id="JobType-@service.ServiceId" value="@service.ServiceId" @(Model.JobType.JobId == service.ServiceId ? "checked" : "")>
+                                        @service.ServiceName
+                                    </label>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="ClientType.JobId">Vrsta klijenta</label>
+                            <div class="col-md-4">
+                                <label class="radio-inline" for="ClientType-0">
+                                    <input type="radio" name="ClientType" id="ClientType-0" value="@((int)ClientType.DOO)" @(Model.ClientType == ClientType.DOO ? "checked" : "")>
+                                    @ResourcesHelper.GetClientType(ClientType.DOO)
+                                </label>
+                                <label class="radio-inline" for="ClientType-1">
+                                    <input type="radio" name="ClientType" id="ClientType-1" value="@((int)ClientType.Preduzetnik)" @(Model.ClientType == ClientType.Preduzetnik ? "checked" : "")>
+                                    @ResourcesHelper.GetClientType(ClientType.Preduzetnik)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="UserId">Za korisnika</label>
+                            <div class="col-md-4">
+                                @foreach (var user in SessionData.Users)
+                                {
+                                    <label class="radio" for="UserId-@user.Id">
+                                        <input type="radio" name="UserId" id="UserId-@user.Id" value="@user.Id" @(user.Id == Model.UserId ? "checked" : "")>
+                                        @user.FirstName @user.LastName
+                                    </label>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label"></label>
+                            <div class="col-md-4" style="text-align: right">
+                                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up"></span> Izmeni podatke</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POP UPUS -->
+@if (shouldOpenPop)
+{
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <h2>Izmena potencijalnog osnivanja</h2>
+            <a class="close" href="@Url.Action("Index", "Creations")">&times;</a>
+            <div class="content">
+                @if (isSuccessful)
+                {
+                    <span>Uspesno ste izmenili potencijalno osnivanje. Sva potencijalna osnivanja mozete videti u listi potencijalnih osnivanja.</span>
+                }
+                else
+                {
+                    <span>Doslo je do greske prilikom izmene osnivanja.</span>
+                }
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("Index", "Creations")" data-dismiss="modal" class="btn secondary">U redu</a>
+            </div>
+        </div>
+    </div>
+}

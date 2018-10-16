@@ -1,0 +1,105 @@
+﻿@using DailyJobStarterPack.Web.ViewModels.Security
+
+<div class="row">
+    <div class="col-md-7" style="margin-top: 50px;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>
+                    <div class="col-md-11">
+                        @SessionData.User.FirstName @SessionData.User.LastName
+                    </div>
+                    <div class="col-md-1 task-number task-number-active">
+                        <span style="margin-left: -5px">@SessionData.Tasks.Count(x => !x.IsDone)</span>
+                    </div>
+                </h4>
+                <div class="row">
+                </div>
+            </div>
+            <div class="panel-body">
+                <p>Vasi zadaci za danas su:</p>
+                <table class="table table-filter">
+                    <tbody>
+                        @foreach (var task in SessionData.Tasks)
+                        {
+                            <tr>
+                                <td style="padding-top: 20px">
+                                    @if (task.IsDone)
+                                    {
+                                        <i class="fa fa-check" style="font-size:40px;color:green"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-close" style="font-size:40px;color:red"></i>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <span class="media-meta pull-right">@task.TaskDate</span>
+                                            <h4 class="task-title">
+                                                @task.Title
+                                            </h4>
+                                            <p class="task-summary">@task.Description</p>
+                                            @if (!task.IsDone)
+                                            {
+                                                <span class="media-meta pull-right"><a href="@Url.Action("MarkAsDone", "Task", new { taskId = task.Id })">Prebaci u zavrseno</a></span>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5" style="margin-top: 50px;">
+        @if (SessionData.KursnaLista != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Kursna lista na dan: @SessionData.KursnaLista.Datum </h4></div>
+                <div class="panel-body">
+                    <div class="box box-info">
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table id="kl-table" class="table table-bordred table-striped" style="width: 100%;" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <th></th>
+                                        <th class="valuta-iznos">
+                                            Kupovni
+                                        </th>
+                                        <th class="valuta-iznos">
+                                            Srednji
+                                        </th>
+                                        <th class="valuta-iznos">
+                                            Prodajni
+                                        </th>
+                                    </tr>
+                                    @foreach (var valuta in SessionData.KursnaLista.Valuta)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <img src="@Url.Content("~/Content/img/currencies/" + valuta.Oznaka.ToLower() + ".png")" alt="" width="16px" height="11px">
+                                                @valuta.Oznaka.ToUpper()
+                                            </td>
+                                            <td class="valuta-iznos">
+                                                @valuta.Kup
+                                            </td>
+                                            <td class="valuta-iznos">
+                                                @valuta.Sre
+                                            </td>
+                                            <td class="valuta-iznos">
+                                                @valuta.Pro
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
