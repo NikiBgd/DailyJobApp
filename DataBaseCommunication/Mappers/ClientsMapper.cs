@@ -3,6 +3,7 @@ using DataBaseCommunication.Mappers.Requests.Clients;
 using DataBaseCommunication.Mappers.Requests.Users;
 using System;
 using System.Collections.Generic;
+using DailyJob.Models;
 
 namespace DailyJobStarterPack.DataBaseObjects.Mappers
 {
@@ -165,5 +166,30 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers
 
             return request;
         }
+
+        public GetReportDetailsRequest GetReportDetailsRequest(long clientId, long reportId, int year)
+        {
+            var request = new GetReportDetailsRequest
+            {
+                ClientId = clientId,
+                ReportId = reportId,
+                Year = year              
+            };
+
+            return request;
+        }
+
+        public UpdateReportDataRequest UpdateReportDataRequest(long clientId, long reportId,List<ReportData> reportData)
+        {
+            var request = new UpdateReportDataRequest
+            {
+                ClientId = clientId,
+                ReportId = reportId,
+                ReportData = reportData
+            };
+
+            return request;
+        }
+
     }
 }

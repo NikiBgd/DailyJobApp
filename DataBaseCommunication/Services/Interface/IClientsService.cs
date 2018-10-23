@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DailyJob.Models;
 using DataBaseCommunication.Mappers.Requests.Clients;
 using DataBaseCommunication.Mappers.Response.Clients;
 
@@ -22,5 +23,8 @@ namespace DataBaseCommunication.Services.Interface
         AllTimesForClientResponse GetAllTimesForClient(AllTimesForClientRequest request);
         AllWorkerOrdersForClientResponse GetAllWorkerOrdersForClient(AllWorkerOrdersForClientRequest request);
         UpdateClientStatusResponse UpdateClientStatus(UpdateClientStatusRequest request);
+        List<ReportData> GetReportDetails(GetReportDetailsRequest request);
+        bool UpdateReportData(UpdateReportDataRequest request);
+
     }
 }

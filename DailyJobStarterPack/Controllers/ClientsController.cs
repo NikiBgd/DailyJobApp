@@ -15,6 +15,9 @@ using System.IO;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using DailyJobStarterPack.Web.Services;
+using DataBaseCommunication.Mappers.Requests.Clients;
+using DailyJob.Models;
+using System.Net;
 
 namespace DailyJobStarterPack.Controllers
 {
@@ -353,5 +356,97 @@ namespace DailyJobStarterPack.Controllers
 
             return View();
         }
+
+        //public ActionResult GetReportDetails(long ClientID, long ReportID)
+        //{
+
+        //    var request = new ClientChangesRequest();
+        //    var result = _clientsService.Fejk(request);
+
+        //    var dateRelatedObjects = result.Where(x => x.IsDateRelated == true).OrderBy(x => x.Ordering).ToList();
+
+        //    var nonDateRelatedObjects = result.Where(x => x.IsDateRelated == false).OrderBy(x => x.Ordering).ToList();
+
+
+
+        //    //if (result.isSuccessful)
+        //    //{
+        //    //    ViewData["isSuccessful"] = true;
+        //    //}
+
+        //    //ClientServicesResponse response = new ClientServicesResponse
+        //    //{
+        //    //    ClientId = clientId,
+        //    //    Services = new List<Service>()
+        //    //};
+        //    ViewData["dateRelatedObjects"] = dateRelatedObjects;
+        //    ViewData["nonDateRelatedObjects"] = nonDateRelatedObjects;
+
+        //    return View();
+        //}
+
+
+        public ActionResult GetReportDetails(long clientId, long reportId, int year)
+        {
+            var request = _clientsMapper.GetReportDetailsRequest(clientId, reportId, year);
+            var result = _clientsService.GetReportDetails(request);
+
+            var dateRelatedObjects = result.Where(x => x.IsDateRelated == true).OrderBy(x => x.Ordering).ToList();
+            var nonDateRelatedObjects = result.Where(x => x.IsDateRelated == false).OrderBy(x => x.Ordering).ToList();
+
+            ViewData["dateRelatedObjects"] = dateRelatedObjects;
+            ViewData["nonDateRelatedObjects"] = nonDateRelatedObjects;
+            ViewData["year"] = year;
+            ViewData["reportId"] = reportId;
+            ViewData["clientId"] = clientId;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult UpdateReportData(UpdateReportDataInputModel inputModel)
+        {
+            var request = _clientsMapper.UpdateReportDataRequest(inputModel.ClientId, inputModel.ReportId,inputModel.ReportData);
+            var result = _clientsService.UpdateReportData(request);
+
+            ViewData["isUpdateSuccessfull"] = result;
+            if (result)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult FejkUpload()
+        {
+            List<ReportData> reportData = new List<ReportData>();
+            ReportData rd = new ReportData
+            {
+                ClientID = 4,
+                ReportID = 1,
+                TypeID = 2,
+                ColumnName = "Bolovanje",
+                IsDateRelated = false,
+                MonthlyPeriod = 1,
+                Year = 0,
+                Month = 0,
+                TextValue = "Ovo je izmenjena napomena",
+                DateValue = new DateTime(2018,10,22)
+            };
+
+            reportData.Add(rd);
+            var request = _clientsMapper.UpdateReportDataRequest(4, 1, reportData);
+            var result = _clientsService.UpdateReportData(request);
+
+            ViewData["isUpdateSuccessfull"] = result;
+            return View();
+        }
+
+
+
     }
 }

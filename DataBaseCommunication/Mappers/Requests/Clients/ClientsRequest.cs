@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DailyJob.Models;
 
 namespace DataBaseCommunication.Mappers.Requests.Clients
 {
@@ -88,5 +89,19 @@ namespace DataBaseCommunication.Mappers.Requests.Clients
     public class ReportsRequest : Request
     {
         public int ClientId { get; set; }
+    }
+
+    public class GetReportDetailsRequest : Request
+    {
+        public long ClientId { get; set; }
+        public long ReportId { get; set; }
+        public int Year { get; set; }
+    }
+
+    public class UpdateReportDataRequest : Request
+    {
+        public long ClientId { get; set; }
+        public long ReportId { get; set; }
+        public List<ReportData> ReportData { get; set; }
     }
 }

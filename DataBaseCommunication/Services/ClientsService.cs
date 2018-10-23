@@ -13,6 +13,7 @@ using DataBaseCommunication.Mappers.Requests.Clients;
 using DataBaseCommunication.Mappers.Response.Clients;
 using DataBaseCommunication.Helpers;
 using DailyJobStarterPack.DataBaseObjects;
+using DailyJob.Models;
 
 namespace DataBaseCommunication.Services
 {
@@ -152,6 +153,56 @@ namespace DataBaseCommunication.Services
                 response.ResponseDescription = ex.Message;
             }
             return response;
+        }
+
+        //public List<ReportData> Fejk(ClientChangesRequest request)
+        //{
+        //    var ret = new List<ReportData>();
+        //    var response = new ClientChangesResponse { ResponseStatus = ResponseStatus.Success };
+
+        //    var clientsProvider = new ClientsProvider();
+        //    try
+        //    {
+                
+        //            ret = clientsProvider.GetDataReportsByClientIDAndReportID(request);
+                
+      
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.ResponseStatus = ResponseStatus.Failure;
+        //        response.ResponseDescription = ex.Message;
+        //    }
+        //    return ret;
+        //}
+
+        public List<ReportData> GetReportDetails(GetReportDetailsRequest request)
+        {
+            var ret = new List<ReportData>();
+            var response = new ClientChangesResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                ret = clientsProvider.GetDataReportsByClientIDAndReportID(request);
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return ret;
+        }
+
+        public bool UpdateReportData(UpdateReportDataRequest request)
+        {
+            var clientsProvider = new ClientsProvider();
+
+            foreach (var data in request.ReportData)
+            {
+                var response = clientsProvider.UpdateReportData(data);
+            }
+            return true;
         }
 
         public ReportsResponse GetReports(ReportsRequest request)

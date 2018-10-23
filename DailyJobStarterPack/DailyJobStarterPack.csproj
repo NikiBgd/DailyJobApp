@@ -9,7 +9,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AFCBF47B-4D99-45A6-9AAC-654300844A5F}</ProjectGuid>
+    <ProjectGuid>{4BE5A68F-300E-45CD-8B0F-DB94840CB704}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -17,7 +17,7 @@
     <AssemblyName>DailyJob</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -259,6 +259,7 @@
     <Compile Include="Helpers\AuthCodesHelper.cs" />
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="Messages\LoginResponse.cs" />
+    <Compile Include="Models\UpdateReportDataInputModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -383,10 +384,10 @@
     <Content Include="Views\Clients\AllTimes.cshtml" />
     <Content Include="Views\Clients\AllWorkerOrders.cshtml" />
     <Content Include="Views\Account\ChangeUserData.cshtml" />
+    <Content Include="Views\Clients\GetReportDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -429,7 +430,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>60940</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/DailyJob</IISUrl>
+          <IISUrl>http://localhost:60940/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

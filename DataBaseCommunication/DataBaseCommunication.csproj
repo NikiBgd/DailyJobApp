@@ -82,6 +82,7 @@
     <Compile Include="Mappers\UsersMapper.cs" />
     <Compile Include="Mappers\UsersMapperRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportData.cs" />
     <Compile Include="Services\CreationsService.cs" />
     <Compile Include="Services\Clients\ClientsSearchCriteria.cs" />
     <Compile Include="Services\Interface\IClientsService.cs" />

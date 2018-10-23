@@ -2,6 +2,7 @@
 using DataBaseCommunication.Mappers.Requests.Users;
 using System.Collections.Generic;
 using System;
+using DailyJob.Models;
 
 namespace DailyJobStarterPack.DataBaseObjects.Mappers.Interfaces
 {
@@ -19,5 +20,7 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers.Interfaces
         AllTimesForClientRequest GetAllTimesForClientRequest(int clientId, DateTime startDate, DateTime endDate);
         AllWorkerOrdersForClientRequest GetAllWorkerOrdersForClientRequest(int clientId, DateTime startDate, DateTime endDate);
         UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId);
+        GetReportDetailsRequest GetReportDetailsRequest(long clientId,long reportId,int year);
+        UpdateReportDataRequest UpdateReportDataRequest(long clientId, long reportId, List<ReportData> reportData);
     }
 }
