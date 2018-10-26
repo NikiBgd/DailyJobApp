@@ -24,7 +24,9 @@ namespace DataBaseCommunication.Services.Interface
         AllWorkerOrdersForClientResponse GetAllWorkerOrdersForClient(AllWorkerOrdersForClientRequest request);
         UpdateClientStatusResponse UpdateClientStatus(UpdateClientStatusRequest request);
         List<ReportData> GetReportDetails(GetReportDetailsRequest request);
+        List<ReportData> GetUniqueReportData(GetReportDetailsRequest request);
         bool UpdateReportData(UpdateReportDataRequest request);
+        bool InsertReportData(InsertReportDataRequest request);
 
     }
 }

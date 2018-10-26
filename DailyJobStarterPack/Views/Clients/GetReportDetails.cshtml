@@ -1,33 +1,42 @@
 ﻿@{ 
+    int monthlyPeriod = 0;
+    int dateRelatedColumnNumbers = 0;
+    var dictionary = new Dictionary<string, List<DailyJob.Models.ReportData>>();
+    KeyValuePair<string, List<DailyJob.Models.ReportData>> defaultDateObject;
+    List<DailyJob.Models.ReportData> firstList = new List<DailyJob.Models.ReportData>();
+    DailyJob.Models.ReportData firstObject = new DailyJob.Models.ReportData();
+
     var dateRelatedObjects = (List<DailyJob.Models.ReportData>)ViewData["dateRelatedObjects"];
     var nonDateRelatedObjects = (List<DailyJob.Models.ReportData>)ViewData["nonDateRelatedObjects"];
 
-    var monthlyPeriod = dateRelatedObjects.FirstOrDefault().MonthlyPeriod;
+    if (dateRelatedObjects != null && dateRelatedObjects.Count > 0) {
+        monthlyPeriod = dateRelatedObjects.FirstOrDefault().MonthlyPeriod;
 
-    var dateRelatedColumnNumbers = 12 / monthlyPeriod;
+        dateRelatedColumnNumbers = 12 / monthlyPeriod;
 
-    var dictionary = new Dictionary<string, List<DailyJob.Models.ReportData>>();
+        dictionary = new Dictionary<string, List<DailyJob.Models.ReportData>>();
 
-    foreach(var item in dateRelatedObjects)
-    {
-        var key = item.Year + "-" + item.Month;
-
-        if (!dictionary.ContainsKey(key))
+        foreach (var item in dateRelatedObjects)
         {
-            var reportList = new List<DailyJob.Models.ReportData> { item };
-            dictionary.Add(key, reportList);
-        }
-        else
-        {
-            var currentList = dictionary[key];
-            currentList.Add(item);
+            var key = item.Year + "-" + item.Month;
+
+            if (!dictionary.ContainsKey(key))
+            {
+                var reportList = new List<DailyJob.Models.ReportData> { item };
+                dictionary.Add(key, reportList);
+            }
+            else
+            {
+                var currentList = dictionary[key];
+                currentList.Add(item);
+            }
+
         }
 
+        defaultDateObject = dictionary.FirstOrDefault();
+        firstList = defaultDateObject.Value;
+        firstObject = firstList.FirstOrDefault();
     }
-
-    var defaultDateObject = dictionary.FirstOrDefault();
-    var firstList = defaultDateObject.Value;
-    var firstObject = firstList.FirstOrDefault();
 }
 
 <table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
@@ -46,32 +55,39 @@
     </tbody>
     <tbody>
         <tr>
-           
-            @for(int i = monthlyPeriod; i<= 12; i=i+monthlyPeriod)
+            @if (dateRelatedObjects != null && dateRelatedObjects.Count > 0)
             {
-               
-                var dynamicKey = firstList.FirstOrDefault().Year + "-" + i;
-                var element = dictionary.ContainsKey(dynamicKey) ? dictionary[dynamicKey] : null;
-                if (element != null)
+                for (int i = monthlyPeriod; i <= 12; i = i + monthlyPeriod)
                 {
 
-                    <td>
-                        @foreach (var val in element)
-                        {
-                            <input class="js-checkbox-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-year="@val.Year" data-month="@i" data-type="@val.TypeID" data-name="@val.ColumnName">@val.ColumnName<br>
-                        }
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @foreach (var val in firstList)
-                        {
-                            <input class="js-checkbox-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" data-year="@val.Year" data-month="@i" data-type="@val.TypeID" data-name="@val.ColumnName">@val.ColumnName<br>
-                        }
-                    </td>
+                    var dynamicKey = firstList.FirstOrDefault().Year + "-" + i;
+                    var element = dictionary.ContainsKey(dynamicKey) ? dictionary[dynamicKey] : null;
+                    if (element != null)
+                    {
 
-                    
+                        <td>
+                            @foreach (var val in element)
+                            {
+                                if (val.TypeID == 3)
+                                {
+                                    <input class="js-checkbox-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-year="@((int)ViewData["year"])" data-month="@i" data-type="@val.TypeID" data-name="@val.ColumnName" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br>
+                                }
+
+                                if (val.TypeID == 1)
+                                {
+                                    @val.ColumnName<br><input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
+
+                                }
+
+                                if (val.TypeID == 2)
+                                {
+                                    @val.ColumnName<br><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
+                                }
+
+                            }
+                        </td>
+                    }
+
                 }
             }
 
@@ -88,20 +104,20 @@
 
             @foreach (var val in nonDateRelatedObjects)
             {
-                if (val.Type == "String")
+                if (val.TypeID == 1)
                 {
-                   <td> <input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@val.Year"></td>
+                   <td> <input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
                     @*<td><a href="/Clients/Details?clientId=4">@val.TextValue</a></td>*@
                 }
 
-                if (val.Type == "Bool")
+                if (val.TypeID == 3)
                 {
-                    <input class="js-bool-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@val.Year">@val.ColumnName<br>
+                    <td><input class="js-bool-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br></td>
                 }
 
-                if (val.Type == "Date")
+                if (val.TypeID == 2)
                 {
-                    <td><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@val.Year"></td>
+                    <td><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
                     @*<td><a href="/Clients/Details?clientId=4">@val.DateValue.ToString()</a></td>*@
                 }
             }
@@ -125,6 +141,7 @@
 
 <script>
     $(document).on("click", ".js-save-report", function () {
+        var methodName = '@((bool)ViewData["hasReport"] ? "UpdateReportData" : "InsertReportData")';
         var reportDataArray = [];
 
         //checkbox only(bool type)
@@ -135,7 +152,10 @@
             var year = $(this).attr("data-year");
             var typeId = $(this).attr("data-type");
             var columnName = $(this).attr("data-name");
-            var boolValue = $(this).is(':checked')
+            var boolValue = $(this).is(':checked');
+            var isDateRelated = $(this).attr("data-date-related");
+            var monthlyPeriod = $(this).attr("data-monthly-period");
+            var ordering = $(this).attr("data-ordering");
 
             var dataCheckbox = {
                 clientId: "@((long)ViewData["clientId"])",
@@ -144,7 +164,10 @@
                 columnName: columnName,
                 year: year,
                 month: month,
-                boolValue: boolValue
+                boolValue: boolValue,
+                isDateRelated: isDateRelated,
+                monthlyPeriod: monthlyPeriod,
+                ordering: ordering
             };
 
             reportDataArray.push(dataCheckbox);
@@ -157,10 +180,14 @@
         var textDataInputs = $(".js-text-value");
 
         $.each(textDataInputs, function (index, value) {
+            var month = $(this).attr("data-month");
             var typeId = $(this).attr("data-type");
             var columnName = $(this).attr("data-name");
             var textValue = $(this).val();
             var year = $(this).attr("data-year");
+            var isDateRelated = $(this).attr("data-date-related");
+            var monthlyPeriod = $(this).attr("data-monthly-period");
+            var ordering = $(this).attr("data-ordering");
 
             var textData = {
                 clientId: "@((long)ViewData["clientId"])",
@@ -169,7 +196,11 @@
                 columnName: columnName,
                 year: year,
                 month: "",
-                textValue: textValue
+                textValue: textValue,
+                isDateRelated: isDateRelated,
+                monthlyPeriod: monthlyPeriod,
+                ordering: ordering,
+                month: month
             };
 
             reportDataArray.push(textData);
@@ -181,10 +212,14 @@
         var dateDataInputs = $(".js-date-value");
 
         $.each(dateDataInputs, function (index, value) {
+            var month = $(this).attr("data-month");
             var typeId = $(this).attr("data-type");
             var columnName = $(this).attr("data-name");
             var dateValue = $(this).val();
             var year = $(this).attr("data-year");
+            var isDateRelated = $(this).attr("data-date-related");
+            var monthlyPeriod = $(this).attr("data-monthly-period");
+            var ordering = $(this).attr("data-ordering");
 
             var dateData = {
                 clientId: "@((long)ViewData["clientId"])",
@@ -193,7 +228,11 @@
                 columnName: columnName,
                 year: year,
                 month: "",
-                dateValue: dateValue
+                dateValue: dateValue,
+                isDateRelated: isDateRelated,
+                monthlyPeriod: monthlyPeriod,
+                ordering: ordering,
+                month: month
             };
 
             reportDataArray.push(dateData);
@@ -204,10 +243,14 @@
         var boolDataInputs = $(".js-bool-value");
 
         $.each(boolDataInputs, function (index, value) {
+            var month = $(this).attr("data-month");
             var typeId = $(this).attr("data-type");
             var columnName = $(this).attr("data-name");
-            var boolValue = $(this).val();
+            var boolValue = $(this).is(':checked');
             var year = $(this).attr("data-year");
+            var isDateRelated = $(this).attr("data-date-related");
+            var monthlyPeriod = $(this).attr("data-monthly-period");
+            var ordering = $(this).attr("data-ordering");
 
             var boolData = {
                 clientId: "@((long)ViewData["clientId"])",
@@ -216,16 +259,19 @@
                 columnName: columnName,
                 year: year,
                 month: "",
-                boolValue: boolValue
+                boolValue: boolValue,
+                isDateRelated: isDateRelated,
+                monthlyPeriod: monthlyPeriod,
+                ordering: ordering,
+                month: month
             };
 
             reportDataArray.push(boolData);
 
         });
 
-
         $.ajax({
-            url: '/clients/UpdateReportData',
+            url: '/clients/' + methodName,
             type: 'POST',
             data: {
                 ClientId: @((long)ViewData["clientId"]),

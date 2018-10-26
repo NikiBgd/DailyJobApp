@@ -104,4 +104,11 @@ namespace DataBaseCommunication.Mappers.Requests.Clients
         public long ReportId { get; set; }
         public List<ReportData> ReportData { get; set; }
     }
+
+    public class InsertReportDataRequest : Request
+    {
+        public long ClientId { get; set; }
+        public long ReportId { get; set; }
+        public List<ReportData> ReportData { get; set; }
+    }
 }

@@ -22,5 +22,6 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers.Interfaces
         UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId);
         GetReportDetailsRequest GetReportDetailsRequest(long clientId,long reportId,int year);
         UpdateReportDataRequest UpdateReportDataRequest(long clientId, long reportId, List<ReportData> reportData);
+        InsertReportDataRequest InsertReportDataRequest(long clientId, long reportId, List<ReportData> reportData);
     }
 }

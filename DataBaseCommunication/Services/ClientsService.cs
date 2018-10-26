@@ -194,6 +194,24 @@ namespace DataBaseCommunication.Services
             return ret;
         }
 
+        public List<ReportData> GetUniqueReportData(GetReportDetailsRequest request)
+        {
+            var ret = new List<ReportData>();
+            var response = new ClientChangesResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                ret = clientsProvider.GetUniqueReportData(request);
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return ret;
+        }
+
         public bool UpdateReportData(UpdateReportDataRequest request)
         {
             var clientsProvider = new ClientsProvider();
@@ -201,6 +219,17 @@ namespace DataBaseCommunication.Services
             foreach (var data in request.ReportData)
             {
                 var response = clientsProvider.UpdateReportData(data);
+            }
+            return true;
+        }
+
+        public bool InsertReportData(InsertReportDataRequest request)
+        {
+            var clientsProvider = new ClientsProvider();
+
+            foreach (var data in request.ReportData)
+            {
+                var response = clientsProvider.InsertReportData(data);
             }
             return true;
         }

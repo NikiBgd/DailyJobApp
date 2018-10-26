@@ -191,5 +191,17 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers
             return request;
         }
 
+        public InsertReportDataRequest InsertReportDataRequest(long clientId, long reportId, List<ReportData> reportData)
+        {
+            var request = new InsertReportDataRequest
+            {
+                ClientId = clientId,
+                ReportId = reportId,
+                ReportData = reportData
+            };
+
+            return request;
+        }
+
     }
 }

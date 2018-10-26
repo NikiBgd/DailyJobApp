@@ -136,7 +136,7 @@ namespace DailyJobStarterPack.Controllers
             var request = _clientsMapper.GetUpdateClientStatusRequest(clientId, 0, SessionData.User.Role, SessionData.User.Team.Id);
             var result = _clientsService.UpdateClientStatus(request);
 
-            if(result.isSuccessful)
+            if (result.isSuccessful)
             {
                 SessionData.Clients = result.NewClientsList;
             }
@@ -242,8 +242,8 @@ namespace DailyJobStarterPack.Controllers
                 switch (reportType)
                 {
                     case "PDF":
-                            file = ReportHelper.GeneratePdfReport(client, documents);
-                            return File(file, "application/pdf", "fileName.pdf");
+                        file = ReportHelper.GeneratePdfReport(client, documents);
+                        return File(file, "application/pdf", "fileName.pdf");
                     case "EXCELL":
                         file = ReportHelper.GenerateExcellReport(client, documents);
                         return File(file, "application/vnd.ms-excel", "fileName.xlsx");
@@ -273,7 +273,7 @@ namespace DailyJobStarterPack.Controllers
 
             var request = _clientsMapper.GetWorkersOrderRequest(clientId, courierId, SessionData.User.Id, SessionData.User.Role, SessionData.User.Team.Id);
             var result = _clientsService.LogWorkerOrder(request);
-            if(result.isSuccessful)
+            if (result.isSuccessful)
             {
                 SessionData.Clients = result.NewClientsList;
             }
@@ -323,7 +323,7 @@ namespace DailyJobStarterPack.Controllers
         {
             var request = _clientsMapper.GetClientServicesRequest(clientId);
             var result = _clientsService.GetClientServices(request);
-            
+
             return View(result);
         }
 
@@ -343,7 +343,7 @@ namespace DailyJobStarterPack.Controllers
             var request = _clientsMapper.UpdateClientServicesRequest(clientId, services);
             var result = _clientsService.UpdateClientServices(request);
 
-            if(result.isSuccessful)
+            if (result.isSuccessful)
             {
                 ViewData["isSuccessful"] = true;
             }
@@ -394,11 +394,34 @@ namespace DailyJobStarterPack.Controllers
             var dateRelatedObjects = result.Where(x => x.IsDateRelated == true).OrderBy(x => x.Ordering).ToList();
             var nonDateRelatedObjects = result.Where(x => x.IsDateRelated == false).OrderBy(x => x.Ordering).ToList();
 
-            ViewData["dateRelatedObjects"] = dateRelatedObjects;
-            ViewData["nonDateRelatedObjects"] = nonDateRelatedObjects;
-            ViewData["year"] = year;
-            ViewData["reportId"] = reportId;
-            ViewData["clientId"] = clientId;
+            if ((dateRelatedObjects != null && dateRelatedObjects.Count > 0) || (nonDateRelatedObjects != null && nonDateRelatedObjects.Count > 0))
+            {
+                ViewData["hasReport"] = true;
+                ViewData["dateRelatedObjects"] = dateRelatedObjects;
+                ViewData["nonDateRelatedObjects"] = nonDateRelatedObjects;
+                ViewData["year"] = year;
+                ViewData["reportId"] = reportId;
+                ViewData["clientId"] = clientId;
+            }
+            else
+            {
+                ViewData["hasReport"] = false;
+                result = _clientsService.GetUniqueReportData(request);
+                if(result != null && result.Count > 0)
+                {
+                    dateRelatedObjects = result.Where(x => x.IsDateRelated == true).OrderBy(x => x.Ordering).ToList();
+                    nonDateRelatedObjects = result.Where(x => x.IsDateRelated == false).OrderBy(x => x.Ordering).ToList();
+                    if ((dateRelatedObjects != null && dateRelatedObjects.Count > 0) || (nonDateRelatedObjects != null && nonDateRelatedObjects.Count > 0))
+                    {
+                        ViewData["dateRelatedObjects"] = dateRelatedObjects;
+                        ViewData["nonDateRelatedObjects"] = nonDateRelatedObjects;
+                        ViewData["year"] = year;
+                        ViewData["reportId"] = reportId;
+                        ViewData["clientId"] = clientId;
+                    }
+
+                }
+            }
 
             return View();
         }
@@ -419,6 +442,24 @@ namespace DailyJobStarterPack.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
         }
+
+        [HttpPost]
+        public ActionResult InsertReportData(InsertReportDataInputModel inputModel)
+        {
+            var request = _clientsMapper.InsertReportDataRequest(inputModel.ClientId, inputModel.ReportId, inputModel.ReportData);
+            var result = _clientsService.InsertReportData(request);
+
+            ViewData["isUpdateSuccessfull"] = result;
+            if (result)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+            }
+        }
+
 
         [HttpGet]
         public ActionResult FejkUpload()

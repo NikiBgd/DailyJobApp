@@ -259,6 +259,7 @@
     <Compile Include="Helpers\AuthCodesHelper.cs" />
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="Messages\LoginResponse.cs" />
+    <Compile Include="Models\InsertReportDataInputModel.cs" />
     <Compile Include="Models\UpdateReportDataInputModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

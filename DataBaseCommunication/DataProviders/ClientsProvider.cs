@@ -545,6 +545,49 @@ namespace DataBaseCommunication.DataProviders
             }
         }
 
+        public bool InsertReportData(ReportData reportData)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.InsertReportData", conn);
+
+            AddInParameter(commandWrapper, "@ClientID", DbType.Int32, reportData.ClientID);
+            AddInParameter(commandWrapper, "@ReportID", DbType.Int32, reportData.ReportID);
+            AddInParameter(commandWrapper, "@TypeID", DbType.Int32, reportData.TypeID);
+            AddInParameter(commandWrapper, "@ColumnName", DbType.String, reportData.ColumnName);
+            AddInParameter(commandWrapper, "@TextValue", DbType.String, reportData.TextValue);
+            AddInParameter(commandWrapper, "@DateValue", DbType.DateTime, reportData.DateValue < new DateTime(1753, 1, 1) ? new DateTime(1753, 1, 1) : reportData.DateValue);
+            AddInParameter(commandWrapper, "@BoolValue", DbType.Boolean, reportData.BoolValue);
+            AddInParameter(commandWrapper, "@Year", DbType.Int32, reportData.Year);
+            AddInParameter(commandWrapper, "@Month", DbType.Int32, reportData.Month);
+            AddInParameter(commandWrapper, "@IsDateRelated", DbType.Boolean, reportData.IsDateRelated);
+            AddInParameter(commandWrapper, "@MonthlyPeriod", DbType.Int32, reportData.MonthlyPeriod);
+            AddInParameter(commandWrapper, "@Ordering", DbType.Int32, reportData.Ordering);
+
+            IDataReader reader = null;
+            List<DataBaseChange> tmp = new List<DataBaseChange>();
+            try
+            {
+                conn.Open();
+                reader = commandWrapper.ExecuteReader();
+                //FillChanges(reader, tmp, 0, int.MaxValue);
+                //MakeDboLog(request.ToString(), reader.ToString(), "dbo.Get_All_Changes");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var test = "testt";
+                return false;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
         public List<ReportData> GetDataReportsByClientIDAndReportID(GetReportDetailsRequest request)
         {
             var ret = new List<ReportData>();
@@ -626,6 +669,73 @@ namespace DataBaseCommunication.DataProviders
                 conn.Close();
             }
         }
+
+
+        public List<ReportData> GetUniqueReportData(GetReportDetailsRequest request)
+        {
+            var ret = new List<ReportData>();
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.GetUniqueReportData", conn);
+
+            AddInParameter(commandWrapper, "@ClientID", DbType.Int32, request.ClientId);
+            AddInParameter(commandWrapper, "@ReportID", DbType.Int32, request.ReportId);
+        
+
+            IDataReader reader = null;
+            List<DataBaseChange> tmp = new List<DataBaseChange>();
+            try
+            {
+                conn.Open();
+
+                using (SqlDataReader rdr = commandWrapper.ExecuteReader())
+                {
+                    // iterate through results, printing each to console
+                    while (rdr.Read())
+                    {
+                        ReportData rd = new ReportData();
+                        rd.ClientID = Convert.ToInt64(rdr["ClientID"]);
+                        rd.ReportID = Convert.ToInt64(rdr["ReportID"]);
+                        rd.TypeID = Convert.ToInt64(rdr["TypeID"]);
+                        rd.ColumnName = (string)rdr["ColumnName"];
+                        rd.IsDateRelated = Convert.ToBoolean(rdr["IsDateRelated"]);
+                        var monthlyPeriod = Convert.ToString(rdr["MonthlyPeriod"]);
+                        if (!string.IsNullOrEmpty(monthlyPeriod))
+                        {
+                            rd.MonthlyPeriod = Convert.ToInt32(rdr["MonthlyPeriod"]);
+                        }
+
+                        var ordering = Convert.ToString(rdr["Ordering"]);
+                        if (!string.IsNullOrEmpty(ordering))
+                        {
+                            rd.Ordering = Convert.ToInt32(rdr["Ordering"]);
+                        }
+
+                        var month = Convert.ToString(rdr["Month"]);
+                        if (!string.IsNullOrEmpty(month))
+                        {
+                            rd.Month = Convert.ToInt32(rdr["Month"]);
+                        }
+
+                        //
+                        rd.BoolValue = false;
+                        rd.TextValue = "";
+                        rd.DateValue = new DateTime(1753, 1, 1);
+                       
+                        ret.Add(rd);
+                    }
+                }
+
+                return ret;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
 
         public List<Service> GetClientServices(ClientServicesRequest request)
         {
