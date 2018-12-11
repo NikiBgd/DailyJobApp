@@ -1,0 +1,235 @@
+﻿@using DataBaseCommunication.DataBaseObjects
+@using DailyJobStarterPack.DataBaseObjects
+@{
+    var clientsBillings = ViewData["clientsBillings"] as Dictionary<long, List<Billing>>;
+    var clients = ViewData["clients"] as List<ClientProfile>;
+    var minMonth = (int)ViewData["minMonth"];
+    var startMonth = (int)ViewData["startMonth"];
+    var hasRecords = (bool)ViewData["hasRecords"];
+    var hasData = (bool)ViewData["hasData"];
+    var year = (int)ViewData["year"];
+
+    var start = (int)ViewData["start"];
+    var end = (int)ViewData["end"];
+
+    var period = (int)ViewData["period"];
+    var size = (int)ViewData["size"];
+
+
+    var firstWarningDeadline = (int)ViewData["firstWarningDeadline"];
+    var secondWarningDeadline = (int)ViewData["secondWarningDeadline"];
+
+    var currentDateTime = DateTime.Now;
+    var monthsName = new List<string>() { "Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar" };
+
+    var diffBetweenMonths = currentDateTime.Month - minMonth;
+    if (diffBetweenMonths == currentDateTime.Month)
+    {
+        diffBetweenMonths = 1;
+    }
+}
+
+
+
+<h1>@year  godina</h1>
+
+<br />
+<br />
+
+<div class="form-group">
+    <div>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=@period&size=@(size-1)">Prethodni period</a>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=@period&size=@(size+1)">Naredni period</a>
+    </div>
+</div>
+
+
+
+<table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
+    <tbody>
+        <tr>
+            <th>Select</th>
+            <th>Ime firme</th>
+
+            @*@if (minMonth > 0)
+                {
+                    for (int i = minMonth; i <= currentDateTime.Month; i++)
+                    {
+                        <th>@i <input class="js-month-value" type="checkbox" name="Month_@i" data-month="@i" data-year="@year"><br></th>
+                    }
+                }
+                else
+                {
+                    <th>@currentDateTime.Month <input class="js-month-value" type="checkbox" name="Month_@currentDateTime.Month" data-year="@year" data-month="@currentDateTime.Month"><br></th>
+                }*@
+
+
+            @for (int i = start; i <= end; i++)
+            {
+                <th>@(monthsName[i - 1]) <input class="js-month-value" type="checkbox" name="Month_@i" data-month="@i" data-year="@year"><br></th>
+            }
+
+
+        </tr>
+    </tbody>
+    <tbody>
+
+
+
+        @foreach (var client in clients)
+        {
+            var clientBillings = clientsBillings[client.CustomerID];
+            if (clientBillings != null && clientBillings.Count > 0)
+            {
+
+                <tr>
+                    <td>
+                        <input class="js-client-id" type="checkbox" name="ClientCheckbox" data-client-id="@client.CustomerID"><br>
+                    </td>
+                    <td>
+                        <div>@client.Name</div>
+                    </td>
+
+
+                    @for (int i = start; i <= end; i++)
+                    {
+                        var currentMonthBilling = clientBillings.Where(x => x.Month == i).FirstOrDefault();
+                        if (currentMonthBilling != null)
+                        {
+                            <td>
+                                <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" @(currentMonthBilling.Paid ? "checked" : "") disabled>Placeno<br>
+                                <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" @(currentMonthBilling.FirstWarning ? "checked" : "") disabled>Poslata Prva opomena<br>
+                                <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" @(currentMonthBilling.SecondWarning ? "checked" : "") disabled>Poslata Druga opomena<br>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" disabled>Placeno<br>
+                                <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" disabled>Poslata Prva opomena<br>
+                                <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" disabled>Poslata Druga opomena<br>
+                            </td>
+                        }
+                    }
+
+                </tr>
+            }
+            else
+            {
+
+                <tr>
+
+                    <td>
+                        <input class="js-client-id" type="checkbox" name="ClientCheckbox" data-client-id="@client.CustomerID"><br>
+                    </td>
+                    <td>
+                        <div>@client.Name</div>
+                    </td>
+
+                    @if (hasRecords)
+                    {
+                        for (int i = start; i <= end; i++)
+                        {
+                            <td>
+                                <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" disabled>Placeno<br>
+                                <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" disabled>Poslata Prva opomena<br>
+                                <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" disabled>Poslata Druga opomena<br>
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        for (int i = start; i <= end; i++)
+                        {
+                            <td>
+                                <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" disabled>Placeno<br>
+                                <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" disabled>Poslata Prva opomena<br>
+                                <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" disabled>Poslata Druga opomena<br>
+                            </td>
+                        }
+                    }
+
+                </tr>
+            }
+        }
+
+
+
+
+
+
+    </tbody>
+</table>
+
+<div>
+    <a class="js-button-action btn btn-info" data-action-type="1" href="#">Platio</a>
+    <a class="js-button-action btn btn-info" data-action-type="2" href="#">Nije Platio</a>
+    <a class="js-button-action btn btn-info" data-action-type="3" href="#">Posalji Prvu opomenu</a>
+    <a class="js-button-action btn btn-info" data-action-type="4" href="#">Posalji Drugu opomenu</a>
+</div>
+<br />
+<br />
+<div class="form-group">
+    <div>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@(year-1)">Prethodna godina</a>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@(year+1)">Naredna godina</a>
+    </div>
+</div>
+
+
+<script>
+    $(document).on("click", ".js-button-action", function (e) {
+        e.preventDefault();
+
+        var clientChkbox = [];
+        var monthsChkbox = [];
+
+        var actionType = $(this).attr("data-action-type");
+
+        var clientCheckboxInputs = $(".js-client-id");
+
+        $.each(clientCheckboxInputs, function (index, value) {
+            var boolValue = $(this).is(':checked');
+            var clientId = $(this).attr("data-client-id");
+            if (boolValue) {
+                clientChkbox.push(clientId);
+            }
+        });
+
+        var monthsCheckboxInputs = $(".js-month-value");
+        var year = "";
+
+        $.each(monthsCheckboxInputs, function (index, value) {
+            var boolValue = $(this).is(':checked');
+            var month = $(this).attr("data-month");
+            if (boolValue) {
+                monthsChkbox.push(month);
+            }
+            if (year == "") {
+                year = $(this).attr("data-year");
+            }
+        });
+
+        var dataToSend = {
+            ClientIds: clientChkbox,
+            Months: monthsChkbox,
+            ActionType: actionType,
+            Year: year
+        };
+
+        $.ajax({
+            url: '/Billing/UpdateClientBillings',
+            type: 'POST',
+            contentType: "application/json",
+            data: JSON.stringify(dataToSend),
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                alert("Doslo je do greske! Pokusajte ponovo");
+            }
+        });
+
+    });
+
+</script>

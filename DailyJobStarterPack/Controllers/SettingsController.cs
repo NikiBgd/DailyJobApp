@@ -76,6 +76,12 @@ namespace DailyJob.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Warnings()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult CreateNewTime(Time time)
         {

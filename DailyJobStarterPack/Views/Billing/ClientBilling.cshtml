@@ -1,0 +1,80 @@
+﻿@using DataBaseCommunication.DataBaseObjects
+@using DailyJobStarterPack.DataBaseObjects
+@{
+    var start = 1;
+    var end = 12;
+
+    var client = (ClientProfile)ViewData["client"];
+    var year = (int)ViewData["year"];
+    var filtheredList = (List<Billing>)ViewData["filtheredList"];
+    var monthsName = new List<string>() { "Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar" };
+}
+
+<h3>@year godina</h3>
+<h1>@client.Name</h1>
+
+<br />
+
+<table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
+    <tbody>
+        <tr>
+
+            @for (int i = 0; i < 12; i++)
+            {
+                <th>@monthsName[i] <br></th>
+            }
+
+
+        </tr>
+    </tbody>
+    <tbody>
+
+
+
+        <tr>
+
+            @for (int i = start; i <= end; i++)
+            {
+                var currentMonthBilling = filtheredList.Where(x => x.Month == i).FirstOrDefault();
+                if (currentMonthBilling != null)
+                {
+                    <td>
+                        <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" @(currentMonthBilling.Paid ? "checked" : "") disabled>Placeno<br>
+                        <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" @(currentMonthBilling.FirstWarning ? "checked" : "") disabled>Poslata Prva opomena<br>
+                        <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" @(currentMonthBilling.SecondWarning ? "checked" : "") disabled>Poslata Druga opomena<br>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <input class="js-checkbox-paid" type="checkbox" name="PaidCheckbox" disabled>Placeno<br>
+                        <input class="js-checkbox-first-warning" type="checkbox" name="FirstWarningCheckbox" disabled>Poslata Prva opomena<br>
+                        <input class="js-checkbox-second-warning" type="checkbox" name="SecondWarningCheckbox" disabled>Poslata Druga opomena<br>
+                    </td>
+                }
+            }
+
+        </tr>
+
+
+
+
+
+
+
+    </tbody>
+</table>
+
+<br />
+<br />
+<div class="form-group">
+    <div>
+        <a class="btn btn-info" href="@Url.Action("ClientBilling", "Billing")?year=@(year-1)&clientId=@client.CustomerID">Prethodna godina</a>
+        <a class="btn btn-info" href="@Url.Action("ClientBilling", "Billing")?year=@(year+1)&clientId=@client.CustomerID">Naredna godina</a>
+    </div>
+</div>
+
+
+
+
+

@@ -244,6 +244,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CreationsController.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="Messages\LoginResponse.cs" />
     <Compile Include="Models\InsertReportDataInputModel.cs" />
+    <Compile Include="Models\UpdateClientsBillingsInputModel.cs" />
     <Compile Include="Models\UpdateReportDataInputModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -386,6 +388,9 @@
     <Content Include="Views\Clients\AllWorkerOrders.cshtml" />
     <Content Include="Views\Account\ChangeUserData.cshtml" />
     <Content Include="Views\Clients\GetReportDetails.cshtml" />
+    <Content Include="Views\Billing\AllUsers.cshtml" />
+    <Content Include="Views\Billing\ClientBilling.cshtml" />
+    <Content Include="Views\Settings\Warnings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
