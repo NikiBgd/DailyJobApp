@@ -1,0 +1,36 @@
+﻿
+@model List<ReportCMSLibrary.ReportType>
+
+@foreach (var report in Model)
+{
+    <p1>@report.ReportName</p1> 
+    <br>
+    <div class="form-group">
+        <div>
+            <input type="submit" value="Delete" data-id="@report.ReportId" class="btn btn-info js-delete-report" />
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).on("click", ".js-delete-report", function () {
+        var reportId = $(this).attr("data-id");
+
+        $.ajax({
+            url: '@Url.Action("DeleteReportById", "Clients")',
+            type: 'POST',
+            data: {
+                reportId: reportId
+            },
+
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                alert("Doslo je do greske! Pokusajte ponovo");
+            }
+        });
+    });
+
+</script>

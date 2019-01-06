@@ -1,0 +1,1352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DailyJobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.AdminSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="AdminSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="IncludeInCalculation" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="IncludeInCalculation" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.AdminSettingsTypesDescriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="AdminSettingsTypesDescriptions">
+          <Key>
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Decription" />
+          </Key>
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Decription" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Billings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="int" />
+          <Property Name="PAID" Type="bit" />
+          <Property Name="FirstWarning" Type="bit" />
+          <Property Name="SecondWarning" Type="bit" />
+          <Property Name="Year" Type="int" />
+          <Property Name="Month" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.ClientCosts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ClientCosts">
+          <Key>
+            <PropertyRef Name="ClientId" />
+            <PropertyRef Name="CostType" />
+            <PropertyRef Name="CostDate" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="CostType" Type="int" Nullable="false" />
+          <Property Name="CostDate" Type="date" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.ClientServices' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ClientServices">
+          <Key>
+            <PropertyRef Name="ClientId" />
+            <PropertyRef Name="ServiceId" />
+          </Key>
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Couriers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Couriers">
+          <Key>
+            <PropertyRef Name="CourierId" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="LegalId" />
+            <PropertyRef Name="Address" />
+          </Key>
+          <Property Name="CourierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LegalId" Type="nchar" MaxLength="13" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Place" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Municipality" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PIB" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="LegalID" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Activity" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Form" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ResponsiblePerson" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResponsiblePersonPhone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResponsiblePersonMail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PDV" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BookKeepingType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Director" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Account" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="EmployeesNumber" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="MainUserId" Type="int" Nullable="false" />
+          <Property Name="SecondUserId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="AmountCode" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="Slava" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="ResponsiblePersonBirthDate" Type="datetime" Nullable="false" />
+          <Property Name="DeliveryMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityCode" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FormSubType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AdditionalMails" Type="nvarchar" MaxLength="250" />
+          <Property Name="CourierDay" Type="int" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.CustomersChanges' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CustomersChanges">
+          <Key>
+            <PropertyRef Name="ChangeNumber" />
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="FieldName" />
+            <PropertyRef Name="OldValue" />
+            <PropertyRef Name="NewValue" />
+            <PropertyRef Name="ChangeDate" />
+          </Key>
+          <Property Name="ChangeNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="FieldName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OldValue" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NewValue" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ChangeDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.CustomersReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CustomersReports">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="ReportId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="ReportId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.CustomerTimes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CustomerTimes">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Time" />
+            <PropertyRef Name="InsertionDate" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Time" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="InsertionDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Firms' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Firms">
+          <Key>
+            <PropertyRef Name="FirmId" />
+            <PropertyRef Name="FirmName" />
+          </Key>
+          <Property Name="FirmId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirmName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Offers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Offers">
+          <Key>
+            <PropertyRef Name="OfferId" />
+            <PropertyRef Name="ContactPerson" />
+            <PropertyRef Name="PIB" />
+            <PropertyRef Name="Mail" />
+            <PropertyRef Name="PhoneNumber" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="ServiceId" />
+            <PropertyRef Name="HeardFrom" />
+            <PropertyRef Name="IsSuccesful" />
+            <PropertyRef Name="Impression" />
+            <PropertyRef Name="BackInfo" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="AmountCurrency" />
+            <PropertyRef Name="IsOurCreation" />
+            <PropertyRef Name="Note" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="OfferId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContactPerson" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PIB" Type="nvarchar" MaxLength="9" Nullable="false" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="ServiceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="HeardFrom" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IsSuccesful" Type="bit" Nullable="false" />
+          <Property Name="Impression" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BackInfo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="AmountCurrency" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="IsOurCreation" Type="bit" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MakeRent" Type="bit" />
+          <Property Name="CompanyType" Type="nvarchar" MaxLength="50" />
+          <Property Name="CompanySubType" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.PossibleCreations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PossibleCreations">
+          <Key>
+            <PropertyRef Name="CreationId" />
+            <PropertyRef Name="JobType" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="Mail" />
+            <PropertyRef Name="PhoneNumber" />
+            <PropertyRef Name="IsPaid" />
+            <PropertyRef Name="IsDone" />
+            <PropertyRef Name="IsMailSent" />
+            <PropertyRef Name="IsAnswerSuccesful" />
+            <PropertyRef Name="ClientType" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="CreationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="FormularDate" Type="datetime" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsPaid" Type="bit" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="IsDone" Type="bit" Nullable="false" />
+          <Property Name="IsMailSent" Type="bit" Nullable="false" />
+          <Property Name="IsAnswerSuccesful" Type="bit" Nullable="false" />
+          <Property Name="ClientType" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Note" Type="nvarchar" MaxLength="150" />
+          <Property Name="PaymentMethod" Type="int" />
+          <Property Name="PIB" Type="nvarchar" MaxLength="50" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="CompanySubType" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ReportData">
+          <Key>
+            <PropertyRef Name="ClientID" />
+            <PropertyRef Name="ReportID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="ColumnName" />
+            <PropertyRef Name="IsDateRelated" />
+            <PropertyRef Name="MonthlyPeriod" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="Month" />
+          </Key>
+          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="ReportID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="ColumnName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IsDateRelated" Type="bit" Nullable="false" />
+          <Property Name="MonthlyPeriod" Type="int" Nullable="false" />
+          <Property Name="Ordering" Type="int" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="Month" Type="int" Nullable="false" />
+          <Property Name="DateValue" Type="datetime" />
+          <Property Name="TextValue" Type="nvarchar" MaxLength="1000" />
+          <Property Name="BoolValue" Type="bit" />
+        </EntityType>
+        <EntityType Name="ReportDataTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.ReportTypes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ReportTypes">
+          <Key>
+            <PropertyRef Name="ReportId" />
+            <PropertyRef Name="ReportName" />
+          </Key>
+          <Property Name="ReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Services' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="ServiceId" />
+            <PropertyRef Name="ServiceName" />
+            <PropertyRef Name="ServiceDescription" />
+            <PropertyRef Name="Price" />
+            <PropertyRef Name="Type" />
+          </Key>
+          <Property Name="ServiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ServiceDescription" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Teams' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Teams">
+          <Key>
+            <PropertyRef Name="TeamID" />
+            <PropertyRef Name="TeamName" />
+            <PropertyRef Name="TeamLeaderId" />
+          </Key>
+          <Property Name="TeamID" Type="int" Nullable="false" />
+          <Property Name="TeamName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Times' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Times">
+          <Key>
+            <PropertyRef Name="TimeId" />
+            <PropertyRef Name="TimeDescription" />
+            <PropertyRef Name="TimeName" />
+            <PropertyRef Name="Value" />
+          </Key>
+          <Property Name="TimeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TimeDescription" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="TimeName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Value" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Trace">
+          <Key>
+            <PropertyRef Name="Timestamp" />
+            <PropertyRef Name="RequestUrl" />
+          </Key>
+          <Property Name="Timestamp" Type="datetime" Nullable="false" />
+          <Property Name="RequestUrl" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="Request" Type="nvarchar(max)" />
+          <Property Name="Response" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="EmploymentDate" Type="datetime" Nullable="false" />
+          <Property Name="Slava" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Role" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Warnings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="int" />
+          <Property Name="WarningDate" Type="datetime" />
+          <Property Name="WarningType" Type="int" />
+        </EntityType>
+        <Association Name="FK">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Warnings" Type="Self.Warnings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Warnings">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Billings_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Billings" Type="Self.Billings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Billings">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportData_ReportDataTypes">
+          <End Role="ReportDataTypes" Type="Self.ReportDataTypes" Multiplicity="1" />
+          <End Role="ReportData" Type="Self.ReportData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportDataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ReportData">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DailyJobModelStoreContainer">
+          <EntitySet Name="Billings" EntityType="Self.Billings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportData" EntityType="Self.ReportData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportDataTypes" EntityType="Self.ReportDataTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Warnings" EntityType="Self.Warnings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AdminSettings" EntityType="Self.AdminSettings" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [AdminSettings].[Id] AS [Id], 
+    [AdminSettings].[Amount] AS [Amount], 
+    [AdminSettings].[Type] AS [Type], 
+    [AdminSettings].[IncludeInCalculation] AS [IncludeInCalculation]
+    FROM [dbo].[AdminSettings] AS [AdminSettings]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="AdminSettingsTypesDescriptions" EntityType="Self.AdminSettingsTypesDescriptions" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [AdminSettingsTypesDescriptions].[Type] AS [Type], 
+    [AdminSettingsTypesDescriptions].[Decription] AS [Decription]
+    FROM [dbo].[AdminSettingsTypesDescriptions] AS [AdminSettingsTypesDescriptions]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ClientCosts" EntityType="Self.ClientCosts" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ClientCosts].[ClientId] AS [ClientId], 
+    [ClientCosts].[CostType] AS [CostType], 
+    [ClientCosts].[CostDate] AS [CostDate], 
+    [ClientCosts].[UserId] AS [UserId]
+    FROM [dbo].[ClientCosts] AS [ClientCosts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ClientServices" EntityType="Self.ClientServices" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ClientServices].[ClientId] AS [ClientId], 
+    [ClientServices].[ServiceId] AS [ServiceId]
+    FROM [dbo].[ClientServices] AS [ClientServices]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Couriers" EntityType="Self.Couriers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Couriers].[CourierId] AS [CourierId], 
+    [Couriers].[FirstName] AS [FirstName], 
+    [Couriers].[LastName] AS [LastName], 
+    [Couriers].[LegalId] AS [LegalId], 
+    [Couriers].[Address] AS [Address]
+    FROM [dbo].[Couriers] AS [Couriers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="CustomersChanges" EntityType="Self.CustomersChanges" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CustomersChanges].[ChangeNumber] AS [ChangeNumber], 
+    [CustomersChanges].[CustomerId] AS [CustomerId], 
+    [CustomersChanges].[UserId] AS [UserId], 
+    [CustomersChanges].[FieldName] AS [FieldName], 
+    [CustomersChanges].[OldValue] AS [OldValue], 
+    [CustomersChanges].[NewValue] AS [NewValue], 
+    [CustomersChanges].[ChangeDate] AS [ChangeDate]
+    FROM [dbo].[CustomersChanges] AS [CustomersChanges]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="CustomersReports" EntityType="Self.CustomersReports" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CustomersReports].[CustomerId] AS [CustomerId], 
+    [CustomersReports].[ReportId] AS [ReportId]
+    FROM [dbo].[CustomersReports] AS [CustomersReports]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="CustomerTimes" EntityType="Self.CustomerTimes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CustomerTimes].[Id] AS [Id], 
+    [CustomerTimes].[CustomerId] AS [CustomerId], 
+    [CustomerTimes].[UserId] AS [UserId], 
+    [CustomerTimes].[Time] AS [Time], 
+    [CustomerTimes].[InsertionDate] AS [InsertionDate]
+    FROM [dbo].[CustomerTimes] AS [CustomerTimes]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Firms" EntityType="Self.Firms" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Firms].[FirmId] AS [FirmId], 
+    [Firms].[FirmName] AS [FirmName]
+    FROM [dbo].[Firms] AS [Firms]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Offers" EntityType="Self.Offers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Offers].[OfferId] AS [OfferId], 
+    [Offers].[ContactPerson] AS [ContactPerson], 
+    [Offers].[PIB] AS [PIB], 
+    [Offers].[Mail] AS [Mail], 
+    [Offers].[PhoneNumber] AS [PhoneNumber], 
+    [Offers].[CreationDate] AS [CreationDate], 
+    [Offers].[ServiceId] AS [ServiceId], 
+    [Offers].[HeardFrom] AS [HeardFrom], 
+    [Offers].[IsSuccesful] AS [IsSuccesful], 
+    [Offers].[Impression] AS [Impression], 
+    [Offers].[BackInfo] AS [BackInfo], 
+    [Offers].[Amount] AS [Amount], 
+    [Offers].[AmountCurrency] AS [AmountCurrency], 
+    [Offers].[IsOurCreation] AS [IsOurCreation], 
+    [Offers].[Note] AS [Note], 
+    [Offers].[UserId] AS [UserId], 
+    [Offers].[Name] AS [Name], 
+    [Offers].[MakeRent] AS [MakeRent], 
+    [Offers].[CompanyType] AS [CompanyType], 
+    [Offers].[CompanySubType] AS [CompanySubType]
+    FROM [dbo].[Offers] AS [Offers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PossibleCreations" EntityType="Self.PossibleCreations" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PossibleCreations].[CreationId] AS [CreationId], 
+    [PossibleCreations].[JobType] AS [JobType], 
+    [PossibleCreations].[CreationDate] AS [CreationDate], 
+    [PossibleCreations].[FormularDate] AS [FormularDate], 
+    [PossibleCreations].[Mail] AS [Mail], 
+    [PossibleCreations].[PhoneNumber] AS [PhoneNumber], 
+    [PossibleCreations].[IsPaid] AS [IsPaid], 
+    [PossibleCreations].[EndDate] AS [EndDate], 
+    [PossibleCreations].[IsDone] AS [IsDone], 
+    [PossibleCreations].[IsMailSent] AS [IsMailSent], 
+    [PossibleCreations].[IsAnswerSuccesful] AS [IsAnswerSuccesful], 
+    [PossibleCreations].[ClientType] AS [ClientType], 
+    [PossibleCreations].[Name] AS [Name], 
+    [PossibleCreations].[UserId] AS [UserId], 
+    [PossibleCreations].[Status] AS [Status], 
+    [PossibleCreations].[Note] AS [Note], 
+    [PossibleCreations].[PaymentMethod] AS [PaymentMethod], 
+    [PossibleCreations].[PIB] AS [PIB], 
+    [PossibleCreations].[Amount] AS [Amount], 
+    [PossibleCreations].[CompanySubType] AS [CompanySubType]
+    FROM [dbo].[PossibleCreations] AS [PossibleCreations]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ReportTypes" EntityType="Self.ReportTypes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ReportTypes].[ReportId] AS [ReportId], 
+    [ReportTypes].[ReportName] AS [ReportName]
+    FROM [dbo].[ReportTypes] AS [ReportTypes]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Services" EntityType="Self.Services" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Services].[ServiceId] AS [ServiceId], 
+    [Services].[ServiceName] AS [ServiceName], 
+    [Services].[ServiceDescription] AS [ServiceDescription], 
+    [Services].[Price] AS [Price], 
+    [Services].[Type] AS [Type]
+    FROM [dbo].[Services] AS [Services]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Teams" EntityType="Self.Teams" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Teams].[TeamID] AS [TeamID], 
+    [Teams].[TeamName] AS [TeamName], 
+    [Teams].[TeamLeaderId] AS [TeamLeaderId]
+    FROM [dbo].[Teams] AS [Teams]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Times" EntityType="Self.Times" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Times].[TimeId] AS [TimeId], 
+    [Times].[TimeDescription] AS [TimeDescription], 
+    [Times].[TimeName] AS [TimeName], 
+    [Times].[Value] AS [Value]
+    FROM [dbo].[Times] AS [Times]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Trace" EntityType="Self.Trace" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Trace].[Timestamp] AS [Timestamp], 
+    [Trace].[RequestUrl] AS [RequestUrl], 
+    [Trace].[UserId] AS [UserId], 
+    [Trace].[Request] AS [Request], 
+    [Trace].[Response] AS [Response]
+    FROM [dbo].[Trace] AS [Trace]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK" Association="Self.FK">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Warnings" EntitySet="Warnings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Billings_Customers" Association="Self.FK_Billings_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Billings" EntitySet="Billings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportData_ReportDataTypes" Association="Self.FK_ReportData_ReportDataTypes">
+            <End Role="ReportDataTypes" EntitySet="ReportDataTypes" />
+            <End Role="ReportData" EntitySet="ReportData" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DailyJobModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Billing">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="PAID" Type="Boolean" />
+          <Property Name="FirstWarning" Type="Boolean" />
+          <Property Name="SecondWarning" Type="Boolean" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="Month" Type="Int32" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_Billings_Customers" FromRole="Billings" ToRole="Customers" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Place" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Municipality" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PIB" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LegalID" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Activity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Form" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResponsiblePerson" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResponsiblePersonPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResponsiblePersonMail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PDV" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookKeepingType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Director" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Account" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmployeesNumber" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MainUserId" Type="Int32" Nullable="false" />
+          <Property Name="SecondUserId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="AmountCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Slava" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ResponsiblePersonBirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeliveryMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FormSubType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AdditionalMails" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CourierDay" Type="Int32" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Billings" Relationship="Self.FK_Billings_Customers" FromRole="Customers" ToRole="Billings" />
+          <NavigationProperty Name="Warnings" Relationship="Self.FK" FromRole="Customers" ToRole="Warnings" />
+        </EntityType>
+        <EntityType Name="ReportData">
+          <Key>
+            <PropertyRef Name="ClientID" />
+            <PropertyRef Name="ReportID" />
+            <PropertyRef Name="TypeID" />
+            <PropertyRef Name="ColumnName" />
+            <PropertyRef Name="IsDateRelated" />
+            <PropertyRef Name="MonthlyPeriod" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="Month" />
+          </Key>
+          <Property Name="ClientID" Type="Int32" Nullable="false" />
+          <Property Name="ReportID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="ColumnName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsDateRelated" Type="Boolean" Nullable="false" />
+          <Property Name="MonthlyPeriod" Type="Int32" Nullable="false" />
+          <Property Name="Ordering" Type="Int32" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="Month" Type="Int32" Nullable="false" />
+          <Property Name="DateValue" Type="DateTime" Precision="3" />
+          <Property Name="TextValue" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="BoolValue" Type="Boolean" />
+          <NavigationProperty Name="ReportDataType" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportData" ToRole="ReportDataTypes" />
+        </EntityType>
+        <EntityType Name="ReportDataType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ReportDatas" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportDataTypes" ToRole="ReportData" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EmploymentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Slava" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Warning">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="WarningDate" Type="DateTime" Precision="3" />
+          <Property Name="WarningType" Type="Int32" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK" FromRole="Warnings" ToRole="Customers" />
+        </EntityType>
+        <EntityType Name="AdminSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="IncludeInCalculation" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="IncludeInCalculation" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AdminSettingsTypesDescription">
+          <Key>
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Decription" />
+          </Key>
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Decription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientCost">
+          <Key>
+            <PropertyRef Name="ClientId" />
+            <PropertyRef Name="CostType" />
+            <PropertyRef Name="CostDate" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="CostType" Type="Int32" Nullable="false" />
+          <Property Name="CostDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientService">
+          <Key>
+            <PropertyRef Name="ClientId" />
+            <PropertyRef Name="ServiceId" />
+          </Key>
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courier">
+          <Key>
+            <PropertyRef Name="CourierId" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="LegalId" />
+            <PropertyRef Name="Address" />
+          </Key>
+          <Property Name="CourierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LegalId" Type="String" MaxLength="13" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomersChanx">
+          <Key>
+            <PropertyRef Name="ChangeNumber" />
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="FieldName" />
+            <PropertyRef Name="OldValue" />
+            <PropertyRef Name="NewValue" />
+            <PropertyRef Name="ChangeDate" />
+          </Key>
+          <Property Name="ChangeNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="FieldName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OldValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NewValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="CustomersReport">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="ReportId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="ReportId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerTime">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Time" />
+            <PropertyRef Name="InsertionDate" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Time" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="InsertionDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Firm">
+          <Key>
+            <PropertyRef Name="FirmId" />
+            <PropertyRef Name="FirmName" />
+          </Key>
+          <Property Name="FirmId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirmName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Offer">
+          <Key>
+            <PropertyRef Name="OfferId" />
+            <PropertyRef Name="ContactPerson" />
+            <PropertyRef Name="PIB" />
+            <PropertyRef Name="Mail" />
+            <PropertyRef Name="PhoneNumber" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="ServiceId" />
+            <PropertyRef Name="HeardFrom" />
+            <PropertyRef Name="IsSuccesful" />
+            <PropertyRef Name="Impression" />
+            <PropertyRef Name="BackInfo" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="AmountCurrency" />
+            <PropertyRef Name="IsOurCreation" />
+            <PropertyRef Name="Note" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="OfferId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContactPerson" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PIB" Type="String" MaxLength="9" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ServiceId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="HeardFrom" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsSuccesful" Type="Boolean" Nullable="false" />
+          <Property Name="Impression" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BackInfo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="AmountCurrency" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsOurCreation" Type="Boolean" Nullable="false" />
+          <Property Name="Note" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MakeRent" Type="Boolean" />
+          <Property Name="CompanyType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanySubType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PossibleCreation">
+          <Key>
+            <PropertyRef Name="CreationId" />
+            <PropertyRef Name="JobType" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="Mail" />
+            <PropertyRef Name="PhoneNumber" />
+            <PropertyRef Name="IsPaid" />
+            <PropertyRef Name="IsDone" />
+            <PropertyRef Name="IsMailSent" />
+            <PropertyRef Name="IsAnswerSuccesful" />
+            <PropertyRef Name="ClientType" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="CreationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FormularDate" Type="DateTime" Precision="3" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsPaid" Type="Boolean" Nullable="false" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="IsDone" Type="Boolean" Nullable="false" />
+          <Property Name="IsMailSent" Type="Boolean" Nullable="false" />
+          <Property Name="IsAnswerSuccesful" Type="Boolean" Nullable="false" />
+          <Property Name="ClientType" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentMethod" Type="Int32" />
+          <Property Name="PIB" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="CompanySubType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ReportType">
+          <Key>
+            <PropertyRef Name="ReportId" />
+            <PropertyRef Name="ReportName" />
+          </Key>
+          <Property Name="ReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Service">
+          <Key>
+            <PropertyRef Name="ServiceId" />
+            <PropertyRef Name="ServiceName" />
+            <PropertyRef Name="ServiceDescription" />
+            <PropertyRef Name="Price" />
+            <PropertyRef Name="Type" />
+          </Key>
+          <Property Name="ServiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ServiceDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="TeamID" />
+            <PropertyRef Name="TeamName" />
+            <PropertyRef Name="TeamLeaderId" />
+          </Key>
+          <Property Name="TeamID" Type="Int32" Nullable="false" />
+          <Property Name="TeamName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Time">
+          <Key>
+            <PropertyRef Name="TimeId" />
+            <PropertyRef Name="TimeDescription" />
+            <PropertyRef Name="TimeName" />
+            <PropertyRef Name="Value" />
+          </Key>
+          <Property Name="TimeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TimeDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TimeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Value" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trace">
+          <Key>
+            <PropertyRef Name="Timestamp" />
+            <PropertyRef Name="RequestUrl" />
+          </Key>
+          <Property Name="Timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RequestUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="Request" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Response" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Billings_Customers">
+          <End Role="Customers" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Billings" Type="Self.Billing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Billings">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK">
+          <End Role="Customers" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Warnings" Type="Self.Warning" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Warnings">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportData_ReportDataTypes">
+          <End Role="ReportDataTypes" Type="Self.ReportDataType" Multiplicity="1" />
+          <End Role="ReportData" Type="Self.ReportData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportDataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ReportData">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DailyJobEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Billings" EntityType="Self.Billing" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="ReportDatas" EntityType="Self.ReportData" />
+          <EntitySet Name="ReportDataTypes" EntityType="Self.ReportDataType" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Warnings" EntityType="Self.Warning" />
+          <EntitySet Name="AdminSettings" EntityType="Self.AdminSetting" />
+          <EntitySet Name="AdminSettingsTypesDescriptions" EntityType="Self.AdminSettingsTypesDescription" />
+          <EntitySet Name="ClientCosts" EntityType="Self.ClientCost" />
+          <EntitySet Name="ClientServices" EntityType="Self.ClientService" />
+          <EntitySet Name="Couriers" EntityType="Self.Courier" />
+          <EntitySet Name="CustomersChanges" EntityType="Self.CustomersChanx" />
+          <EntitySet Name="CustomersReports" EntityType="Self.CustomersReport" />
+          <EntitySet Name="CustomerTimes" EntityType="Self.CustomerTime" />
+          <EntitySet Name="Firms" EntityType="Self.Firm" />
+          <EntitySet Name="Offers" EntityType="Self.Offer" />
+          <EntitySet Name="PossibleCreations" EntityType="Self.PossibleCreation" />
+          <EntitySet Name="ReportTypes" EntityType="Self.ReportType" />
+          <EntitySet Name="Services" EntityType="Self.Service" />
+          <EntitySet Name="Teams" EntityType="Self.Team" />
+          <EntitySet Name="Times" EntityType="Self.Time" />
+          <EntitySet Name="Traces" EntityType="Self.Trace" />
+          <AssociationSet Name="FK_Billings_Customers" Association="Self.FK_Billings_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Billings" EntitySet="Billings" />
+          </AssociationSet>
+          <AssociationSet Name="FK" Association="Self.FK">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Warnings" EntitySet="Warnings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportData_ReportDataTypes" Association="Self.FK_ReportData_ReportDataTypes">
+            <End Role="ReportDataTypes" EntitySet="ReportDataTypes" />
+            <End Role="ReportData" EntitySet="ReportDatas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DailyJobModelStoreContainer" CdmEntityContainer="DailyJobEntities">
+          <EntitySetMapping Name="Billings">
+            <EntityTypeMapping TypeName="DailyJobModel.Billing">
+              <MappingFragment StoreEntitySet="Billings">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="PAID" ColumnName="PAID" />
+                <ScalarProperty Name="FirstWarning" ColumnName="FirstWarning" />
+                <ScalarProperty Name="SecondWarning" ColumnName="SecondWarning" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="DailyJobModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="Municipality" ColumnName="Municipality" />
+                <ScalarProperty Name="PIB" ColumnName="PIB" />
+                <ScalarProperty Name="LegalID" ColumnName="LegalID" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="Form" ColumnName="Form" />
+                <ScalarProperty Name="ResponsiblePerson" ColumnName="ResponsiblePerson" />
+                <ScalarProperty Name="ResponsiblePersonPhone" ColumnName="ResponsiblePersonPhone" />
+                <ScalarProperty Name="ResponsiblePersonMail" ColumnName="ResponsiblePersonMail" />
+                <ScalarProperty Name="PDV" ColumnName="PDV" />
+                <ScalarProperty Name="BookKeepingType" ColumnName="BookKeepingType" />
+                <ScalarProperty Name="Director" ColumnName="Director" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="EmployeesNumber" ColumnName="EmployeesNumber" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="MainUserId" ColumnName="MainUserId" />
+                <ScalarProperty Name="SecondUserId" ColumnName="SecondUserId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AmountCode" ColumnName="AmountCode" />
+                <ScalarProperty Name="Slava" ColumnName="Slava" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="ResponsiblePersonBirthDate" ColumnName="ResponsiblePersonBirthDate" />
+                <ScalarProperty Name="DeliveryMethod" ColumnName="DeliveryMethod" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ActivityCode" ColumnName="ActivityCode" />
+                <ScalarProperty Name="FormSubType" ColumnName="FormSubType" />
+                <ScalarProperty Name="AdditionalMails" ColumnName="AdditionalMails" />
+                <ScalarProperty Name="CourierDay" ColumnName="CourierDay" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportDatas">
+            <EntityTypeMapping TypeName="DailyJobModel.ReportData">
+              <MappingFragment StoreEntitySet="ReportData">
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ReportID" ColumnName="ReportID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="ColumnName" ColumnName="ColumnName" />
+                <ScalarProperty Name="IsDateRelated" ColumnName="IsDateRelated" />
+                <ScalarProperty Name="MonthlyPeriod" ColumnName="MonthlyPeriod" />
+                <ScalarProperty Name="Ordering" ColumnName="Ordering" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="DateValue" ColumnName="DateValue" />
+                <ScalarProperty Name="TextValue" ColumnName="TextValue" />
+                <ScalarProperty Name="BoolValue" ColumnName="BoolValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportDataTypes">
+            <EntityTypeMapping TypeName="DailyJobModel.ReportDataType">
+              <MappingFragment StoreEntitySet="ReportDataTypes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="DailyJobModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="EmploymentDate" ColumnName="EmploymentDate" />
+                <ScalarProperty Name="Slava" ColumnName="Slava" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Warnings">
+            <EntityTypeMapping TypeName="DailyJobModel.Warning">
+              <MappingFragment StoreEntitySet="Warnings">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="WarningDate" ColumnName="WarningDate" />
+                <ScalarProperty Name="WarningType" ColumnName="WarningType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdminSettings">
+            <EntityTypeMapping TypeName="DailyJobModel.AdminSetting">
+              <MappingFragment StoreEntitySet="AdminSettings">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IncludeInCalculation" ColumnName="IncludeInCalculation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdminSettingsTypesDescriptions">
+            <EntityTypeMapping TypeName="DailyJobModel.AdminSettingsTypesDescription">
+              <MappingFragment StoreEntitySet="AdminSettingsTypesDescriptions">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Decription" ColumnName="Decription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientCosts">
+            <EntityTypeMapping TypeName="DailyJobModel.ClientCost">
+              <MappingFragment StoreEntitySet="ClientCosts">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="CostType" ColumnName="CostType" />
+                <ScalarProperty Name="CostDate" ColumnName="CostDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientServices">
+            <EntityTypeMapping TypeName="DailyJobModel.ClientService">
+              <MappingFragment StoreEntitySet="ClientServices">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Couriers">
+            <EntityTypeMapping TypeName="DailyJobModel.Courier">
+              <MappingFragment StoreEntitySet="Couriers">
+                <ScalarProperty Name="CourierId" ColumnName="CourierId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="LegalId" ColumnName="LegalId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomersChanges">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomersChanx">
+              <MappingFragment StoreEntitySet="CustomersChanges">
+                <ScalarProperty Name="ChangeNumber" ColumnName="ChangeNumber" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="OldValue" ColumnName="OldValue" />
+                <ScalarProperty Name="NewValue" ColumnName="NewValue" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomersReports">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomersReport">
+              <MappingFragment StoreEntitySet="CustomersReports">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTimes">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomerTime">
+              <MappingFragment StoreEntitySet="CustomerTimes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="InsertionDate" ColumnName="InsertionDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Firms">
+            <EntityTypeMapping TypeName="DailyJobModel.Firm">
+              <MappingFragment StoreEntitySet="Firms">
+                <ScalarProperty Name="FirmId" ColumnName="FirmId" />
+                <ScalarProperty Name="FirmName" ColumnName="FirmName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offers">
+            <EntityTypeMapping TypeName="DailyJobModel.Offer">
+              <MappingFragment StoreEntitySet="Offers">
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+                <ScalarProperty Name="PIB" ColumnName="PIB" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="HeardFrom" ColumnName="HeardFrom" />
+                <ScalarProperty Name="IsSuccesful" ColumnName="IsSuccesful" />
+                <ScalarProperty Name="Impression" ColumnName="Impression" />
+                <ScalarProperty Name="BackInfo" ColumnName="BackInfo" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AmountCurrency" ColumnName="AmountCurrency" />
+                <ScalarProperty Name="IsOurCreation" ColumnName="IsOurCreation" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MakeRent" ColumnName="MakeRent" />
+                <ScalarProperty Name="CompanyType" ColumnName="CompanyType" />
+                <ScalarProperty Name="CompanySubType" ColumnName="CompanySubType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PossibleCreations">
+            <EntityTypeMapping TypeName="DailyJobModel.PossibleCreation">
+              <MappingFragment StoreEntitySet="PossibleCreations">
+                <ScalarProperty Name="CreationId" ColumnName="CreationId" />
+                <ScalarProperty Name="JobType" ColumnName="JobType" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="FormularDate" ColumnName="FormularDate" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
+                <ScalarProperty Name="IsMailSent" ColumnName="IsMailSent" />
+                <ScalarProperty Name="IsAnswerSuccesful" ColumnName="IsAnswerSuccesful" />
+                <ScalarProperty Name="ClientType" ColumnName="ClientType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="PIB" ColumnName="PIB" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CompanySubType" ColumnName="CompanySubType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportTypes">
+            <EntityTypeMapping TypeName="DailyJobModel.ReportType">
+              <MappingFragment StoreEntitySet="ReportTypes">
+                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+                <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Services">
+            <EntityTypeMapping TypeName="DailyJobModel.Service">
+              <MappingFragment StoreEntitySet="Services">
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="ServiceDescription" ColumnName="ServiceDescription" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="DailyJobModel.Team">
+              <MappingFragment StoreEntitySet="Teams">
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
+                <ScalarProperty Name="TeamLeaderId" ColumnName="TeamLeaderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Times">
+            <EntityTypeMapping TypeName="DailyJobModel.Time">
+              <MappingFragment StoreEntitySet="Times">
+                <ScalarProperty Name="TimeId" ColumnName="TimeId" />
+                <ScalarProperty Name="TimeDescription" ColumnName="TimeDescription" />
+                <ScalarProperty Name="TimeName" ColumnName="TimeName" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Traces">
+            <EntityTypeMapping TypeName="DailyJobModel.Trace">
+              <MappingFragment StoreEntitySet="Trace">
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="RequestUrl" ColumnName="RequestUrl" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Request" ColumnName="Request" />
+                <ScalarProperty Name="Response" ColumnName="Response" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

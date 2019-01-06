@@ -18,6 +18,8 @@ using DailyJobStarterPack.Web.Services;
 using DataBaseCommunication.Mappers.Requests.Clients;
 using DailyJob.Models;
 using System.Net;
+using ReportCMSLibrary.Models;
+using ReportCMSLibrary;
 
 namespace DailyJobStarterPack.Controllers
 {
@@ -386,11 +388,14 @@ namespace DailyJobStarterPack.Controllers
                 //update user data
                 SessionData.Clients = result.NewClientsList;
                 ViewData["isSuccessful"] = true;
+
+                ReportCMSUtility.HandleReportsForNewCustomer(result.NewClientsList.Max(x => x.CustomerID));
             }
 
             return View();
         }
 
+        
         [HttpGet]
         public ActionResult ClientServices(int clientId)
         {
@@ -424,7 +429,7 @@ namespace DailyJobStarterPack.Controllers
             ClientServicesResponse response = new ClientServicesResponse
             {
                 ClientId = clientId,
-                Services = new List<Service>()
+                Services = new List<DataBaseObjects.Service>()
             };
 
             return View();
@@ -533,12 +538,62 @@ namespace DailyJobStarterPack.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult InsertNewReport()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult InsertNewReport(List<InsertNewReportInputModel> report)
+        {
+            var mappedReport = new List<ColumnReport>();
+            if(report != null)
+            {
+                foreach (var column in report)
+                {
+                    var newColumn = new ColumnReport
+                    {
+                        ColumnName = column.ColumnName,
+                        TypeID = column.TypeID,
+                        IsDateRelated = column.IsDateRelated,
+                        MonthlyPeriod = column.MonthlyPeriod,
+                        Ordering = column.Ordering
+                    };
+                    
+                    mappedReport.Add(newColumn);
+                }
+            }
+
+            ReportCMSLibrary.ReportCMSUtility.InsertNewReport(mappedReport);
+
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult DeleteReport()
+        {
+            var reports = ReportCMSUtility.GetAllReports();
+
+            return View(reports);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteReportById(int reportId)
+        {
+            ReportCMSUtility.DeleteReport(reportId);
+
+            HttpContext.Response.StatusCode = 200;
+
+            return Json(new { message = "Report is successfuly deleted" });
+        }
+
 
         [HttpGet]
         public ActionResult FejkUpload()
         {
-            List<ReportData> reportData = new List<ReportData>();
-            ReportData rd = new ReportData
+            List<DailyJob.Models.ReportData> reportData = new List<DailyJob.Models.ReportData>();
+            DailyJob.Models.ReportData rd = new DailyJob.Models.ReportData
             {
                 ClientID = 4,
                 ReportID = 1,
@@ -559,8 +614,5 @@ namespace DailyJobStarterPack.Controllers
             ViewData["isUpdateSuccessfull"] = result;
             return View();
         }
-
-
-
     }
 }

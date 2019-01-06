@@ -1,0 +1,109 @@
+﻿<div class="js-columns-list">
+
+</div>
+
+<div class="form-group">
+    <div class="js-new-column">
+        <input type="submit" value="+ Dodaj novu kolonu" class="btn btn-info" />
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+
+
+<div class="js-column-shema" style="display:none">
+    <p1>Unesite naziv kolone:</p1>
+    <br><input class="js-column-name" type="text" name="columnName" value="">
+
+    <br />
+    <br />
+    <p1>Odaberite tip polja:</p1>
+    <select class="js-column-type">
+        <option value="1">Tekst</option>
+        <option value="3">Bool</option>
+        <option value="2">Datum</option>
+    </select>
+    <br />
+    <br />
+
+    <p1>Da li je polje vezano za period:</p1>
+    <select class="js-column-date-related">
+        <option value="true">Da</option>
+        <option value="false">Ne</option>
+    </select>
+    <br />
+    <br />
+
+    <p1>Odaberite period (ako je polje vezano za period) :</p1>
+    <select class="js-period-length">
+        <option value="1">Mesecni</option>
+        <option value="3">Tromesecni</option>
+    </select>
+    <br />
+    <br />
+
+    <p1>Unesite poziciju polja (redosled prikaza):</p1>
+    <br><input class="js-order-value" type="text" name="columnOrder" value="">
+    <br />
+    <br />
+    <p1>------------------------------------------------------------------------------------------------</p1>
+    <br />
+    <br />
+</div>
+
+
+<div class="form-group">
+    <div class="js-save-report-shema">
+        <input type="submit" value="Save" class="btn btn-info" />
+    </div>
+</div>
+
+
+
+<script>
+    $(document).on("click", ".js-new-column", function () {
+        var columnShema = $(".js-column-shema").html();
+        $('.js-columns-list').append("<div class='js-column-element'> " + columnShema + "</div>");
+    });
+
+    $(document).on("click", ".js-save-report-shema", function () {
+        var reportDataArray = [];
+        var columnElements = $(".js-column-element");
+
+        $.each(columnElements, function (index, value) {
+            var name = $(this).find(".js-column-name").val();
+            var typeId = $(this).find(".js-column-type").val();
+            var isDateRelated = $(this).find(".js-column-date-related").val();
+            var periodLength = $(this).find(".js-period-length").val();
+            var order = $(this).find(".js-order-value").val();
+
+            var dataColumn = {
+                ColumnName: name,
+                TypeID: typeId,
+                IsDateRelated: isDateRelated,
+                MonthlyPeriod: periodLength,
+                Ordering: order
+            };
+
+            reportDataArray.push(dataColumn);
+        });
+
+
+        $.ajax({
+            url: '@Url.Action("InsertNewReport", "Clients")',
+            type: 'POST',
+            data: {
+                report: reportDataArray
+            },
+
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+                alert("Doslo je do greske! Pokusajte ponovo");
+            }
+        });
+    });
+</script>
