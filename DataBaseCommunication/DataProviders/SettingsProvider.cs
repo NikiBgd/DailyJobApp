@@ -88,6 +88,12 @@ namespace DataBaseCommunication.DataProviders
         {
             public const string FirmId = "FirmId";
             public const string FirmName = "FirmName";
+            public const string LegalId = "LegalId";
+            public const string AccountNumber = "AccountNumber";
+            public const string Address = "Address";
+            public const string Mail = "Mail";
+            public const string PhoneNumber = "PhoneNumber";
+            public const string PIB = "PIB";
         }
 
         public List<Firm> FillFirms(IDataReader reader, List<Firm> rows, int start, int pageLength)
@@ -107,6 +113,12 @@ namespace DataBaseCommunication.DataProviders
                 {
                     FirmId = DataHelper.GetInteger(reader[FirmFieldNames.FirmId]),
                     FirmName = DataHelper.GetString(reader[FirmFieldNames.FirmName]),
+                    LegalId = DataHelper.GetString(reader[FirmFieldNames.LegalId]),
+                    AccountNumber = DataHelper.GetString(reader[FirmFieldNames.AccountNumber]),
+                    Address = DataHelper.GetString(reader[FirmFieldNames.Address]),
+                    Mail = DataHelper.GetString(reader[FirmFieldNames.Mail]),
+                    PhoneNumber = DataHelper.GetString(reader[FirmFieldNames.PhoneNumber]),
+                    PIB = DataHelper.GetString(reader[FirmFieldNames.PIB]),
                 };
 
                 rows.Add(smallFirmProfile);
@@ -219,6 +231,13 @@ namespace DataBaseCommunication.DataProviders
             var commandWrapper = GetStoredProcCommand("dbo.Insert_Firm", conn);
 
             AddInParameter(commandWrapper, "@FirmName", DbType.String, request.Firm.FirmName);
+            AddInParameter(commandWrapper, "@PIB", DbType.String, request.Firm.PIB);
+            AddInParameter(commandWrapper, "@Address", DbType.String, request.Firm.Address);
+            AddInParameter(commandWrapper, "@AccountNumber", DbType.String, request.Firm.AccountNumber);
+            AddInParameter(commandWrapper, "@PhoneNumber", DbType.String, request.Firm.PhoneNumber);
+            AddInParameter(commandWrapper, "@Mail", DbType.String, request.Firm.Mail);
+            AddInParameter(commandWrapper, "@LegalId", DbType.String, request.Firm.LegalId);
+
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
             AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);

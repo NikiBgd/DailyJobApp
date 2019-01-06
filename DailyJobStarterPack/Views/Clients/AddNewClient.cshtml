@@ -102,7 +102,7 @@
                                 <i class="fa fa-briefcase">
                                 </i>
                             </div>
-                            <input id="CreationDate" name="CreationDate" type="text" class="form-control input-md">
+                            <input id="CreationDate" name="CreationDate" type="text" class="form-control input-md"  autocomplete="off">
                             <script>
                                 $(function () {
                                     $("#CreationDate").datepicker();
@@ -182,7 +182,7 @@
                                 <i class="fa fa-briefcase">
                                 </i>
                             </div>
-                            <input id="StartDate" name="StartDate" type="text" class="form-control input-md">
+                            <input id="StartDate" name="StartDate" type="text" class="form-control input-md"  autocomplete="off">
                             <script>
                                 $(function () {
                                     $("#StartDate").datepicker();
@@ -248,7 +248,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-envelope-o"></i>
                             </div>
-                            <input id="ResponsiblePersonBirthDate" name="ResponsiblePersonBirthDate" type="text" class="form-control input-md">
+                            <input id="ResponsiblePersonBirthDate" name="ResponsiblePersonBirthDate" type="text" class="form-control input-md"  autocomplete="off">
                             <script>
                                 $(function () {
                                     $("#ResponsiblePersonBirthDate").datepicker();
@@ -347,7 +347,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-envelope-o"></i>
                             </div>
-                            <input id="BirthDate" name="BirthDate" type="text" class="form-control input-md">
+                            <input id="BirthDate" name="BirthDate" type="text" class="form-control input-md"  autocomplete="off">
                             <script>
                                 $(function () {
                                     $("#BirthDate").datepicker();
@@ -427,6 +427,52 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="BillFirm">Firma sa koje se kreiraju fakture</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-envelope-o"></i>
+                            </div>
+                            <select id="BillFirm" name="BillFirm" class="form-control">
+                                @foreach (var firm in SessionData.Firms)
+                                {
+                                    <option value="@firm.FirmId">@firm.FirmName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="DateFrom">Period saradnje</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-envelope-o"></i>
+                            </div>
+                            <input id="DateFrom" name="DateFrom" type="text" class="form-control input-md" autocomplete="off" >
+                            <script>
+                                $(function () {
+                                    $("#DateFrom").datepicker();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-envelope-o"></i>
+                            </div>
+                            <input id="DateTo" name="DateTo" type="text" class="form-control input-md" autocomplete="off">
+                            <script>
+                                $(function () {
+                                    $("#DateTo").datepicker();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>

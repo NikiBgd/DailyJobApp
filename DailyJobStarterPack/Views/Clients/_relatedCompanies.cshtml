@@ -1,0 +1,77 @@
+﻿@using DailyJobStarterPack.DataBaseObjects
+
+@model List<RelatedCompany>
+
+@foreach (var rComp in Model)
+{
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="col-sm-8">
+            <a href="@Url.Action("Details", "Clients")?clientId=@rComp.RelatedCompanyId">@rComp.RelatedCompanyName</a>
+        </div>
+        <div class="col-sm-4">
+            <button class="btn btn-danger btn-xs confirm-delete-related-comp" data-comp-id="@Request.Params["clientId"]" data-rel-comp-id="@rComp.RelatedCompanyId">
+                <span class="glyphicon glyphicon-trash"></span> Obrisi
+            </button>
+        </div>
+    </div>
+}
+<div id="modal-from-dom-rel-comp" class="modal hide overlay">
+    <div class="popup">
+        <div class="modal-header">
+            <a href="#" data-dismiss="modal" class="close">&times;</a>
+            <h3>Ukloni povezanost</h3>
+        </div>
+        <div class="modal-body">
+            <p>Da li ste sigurni da zelite da uklonite ovu povezanost kompanija?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="" class="btn danger-delete" data-comp-id="" data-rel-comp-id="">Da</a>
+            <a href="#" data-dismiss="modal" class="btn-secondary">Ne</a>
+        </div>
+    </div>
+</div>
+<script>
+    $('.confirm-delete-related-comp').on('click', function (e) {
+        e.preventDefault();
+
+        var compId = $(this).data('comp-id');
+        var relCompId = $(this).data('rel-comp-id');
+        debugger;
+        $('#modal-from-dom-rel-comp').data('comp-id', compId).data('rel-comp-id', relCompId).modal('show').trigger('show');
+    });
+
+    $('#modal-from-dom-rel-comp').on('show', function () {
+        debugger;
+        var compId = $(this).data('comp-id'),
+            relCompId = $(this).data('rel-comp-id'),
+            removeBtn = $(this).find('.danger-delete');
+
+        removeBtn.attr('href', 'javascript: DeleteRelatedCompany(' + compId + ',' + relCompId  + ')');
+    });
+
+
+    function DeleteRelatedCompany(compId, relCompId) {
+         $.ajax({
+           type: "POST",
+           url: "@Url.Action("DeleteRelatedCompany", "Clients")",
+           data: { 'companyId': compId, 'relatedCompanyId': relCompId},
+           dataType: "json",
+           success: function (result) {
+               if (result.isSuccessful)
+               {
+                   $('.modal-body').html('<p>Uspesno ste obrisali klijenta iz sistema.</p>')
+                   $('.modal-footer').html('<a href="@Url.Action("Details", "Clients")?clientId=@Request.Params["clientId"]" class="btn secondary">U redu</a>');
+               }
+               else
+               {
+                   $('.modal-body').html('<p>' + result.ResponseDescription + '</p>')
+                   $('.modal-footer').html('<a href="@Url.Action("Details", "Clients")?clientId=@Request.Params["clientId"]" class="btn secondary">U redu</a>');
+               }
+           },
+           error: function(response){
+               $('.modal-body').html('<p>Doslo je do greske prilkom brisanja klijenta iz sistema.</p>')
+               $('.modal-footer').html('<a href="@Url.Action("Details", "Clients")?clientId=@Request.Params["clientId"]" class="btn secondary">U redu</a>');
+           }
+        });
+    }
+</script>

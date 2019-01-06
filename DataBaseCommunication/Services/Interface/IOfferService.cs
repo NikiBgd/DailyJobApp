@@ -12,5 +12,7 @@ namespace DataBaseCommunication.Services.Interface
     {
         OffersResponse GetOffers(OffersRequest request);
         CreateNewOfferResponse AddNewOffer(CreateNewOfferRequest request);
+        UpdateOfferResponse UpdateOffer(UpdateOfferRequest request);
+        DeleteOfferResponse DeleteOffer(DeleteOfferRequest request);
     }
 }

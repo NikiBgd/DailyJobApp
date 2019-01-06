@@ -17,4 +17,14 @@ namespace DataBaseCommunication.Mappers.Requests.Offers
     {
         public Offer Offer { get; set; }
     }
+
+    public class UpdateOfferRequest : Request
+    {
+        public Offer Offer { get; set; }
+    }
+
+    public class DeleteOfferRequest : Request
+    {
+        public int OfferId { get; set; }
+    }
 }

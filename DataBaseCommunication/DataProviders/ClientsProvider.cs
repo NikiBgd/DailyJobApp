@@ -61,8 +61,10 @@ namespace DataBaseCommunication.DataProviders
             public const string CourierDay = "CourierDay";
             public const string TotaCourierVisits = "TotaCourierVisits";
             public const string Status = "Status";
-            
-
+            public const string BillFirm = "BillFirm";
+            public const string DateFrom = "DateFrom";
+            public const string DateTo = "DateTo";
+            public const string Reports = "Reports";
         }
 
         public static class ChangesFieldNames
@@ -92,6 +94,8 @@ namespace DataBaseCommunication.DataProviders
             public const string ClientId = "ClientId";
             public const string CostDate = "CostDate";
             public const string CostType = "CostType";
+            public const string RelatedCompanyId = "RelatedCompanyId";
+            public const string RelatedCompanyName = "RelatedCompanyName";
         }
 
         #endregion
@@ -148,7 +152,19 @@ namespace DataBaseCommunication.DataProviders
                     CourierDay = DataHelper.GetInteger(reader[ClientsFieldNames.CourierDay]),
                     TotaCourierVisits = DataHelper.GetInteger(reader[ClientsFieldNames.TotaCourierVisits]),
                     Status = DataHelper.GetInteger(reader[ClientsFieldNames.Status]),
+                    BillFirm = DataHelper.GetInteger(reader[ClientsFieldNames.BillFirm]),
+                    DateFrom = DataHelper.GetDateTime(reader[ClientsFieldNames.DateFrom]),
+                    DateTo = DataHelper.GetDateTime(reader[ClientsFieldNames.DateTo]),
+                    Reports = new List<int>()
                 };
+
+                var reports = DataHelper.GetString(reader[ClientsFieldNames.Reports]);
+                var reportsIds = reports.Split(',');
+                foreach (var repId in reportsIds)
+                {
+                    if (repId != "") smallClientProfile.Reports.Add(Int32.Parse(repId));
+                }
+
 
                 rows.Add(smallClientProfile);
             }
@@ -194,6 +210,7 @@ namespace DataBaseCommunication.DataProviders
 
             AddInParameter(commandWrapper, "@CustomerID", DbType.Int32, request.ClientId);
             AddInParameter(commandWrapper, "@Status", DbType.Int32, request.Status);
+            AddInParameter(commandWrapper, "@Reason", DbType.String, request.Reason);
 
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
@@ -205,7 +222,7 @@ namespace DataBaseCommunication.DataProviders
                 int results = commandWrapper.ExecuteNonQuery();
 
                 var isProcedureSucced = Convert.ToBoolean(results);
-                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.Update_Client_Services");
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.Update_Client_Status");
 
                 var errorObject = GetParameterValue(commandWrapper, "@ERROR");
                 var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
@@ -272,6 +289,32 @@ namespace DataBaseCommunication.DataProviders
             }
             return rows;
         }
+
+        public List<RelatedCompany> FillRelatedCompanies(IDataReader reader, List<RelatedCompany> rows, int start, int pageLength)
+        {
+
+            for (int i = 0; i < start; i++)
+            {
+                if (!reader.Read())
+                    return rows;
+            }
+
+            for (int i = 0; i < pageLength; i++)
+            {
+                if (!reader.Read())
+                    break;
+
+                var smallReport = new RelatedCompany
+                {
+                    RelatedCompanyId = DataHelper.GetInteger(reader[ReportFieldNames.RelatedCompanyId]),
+                    RelatedCompanyName = DataHelper.GetString(reader[ReportFieldNames.RelatedCompanyName]),
+                };
+
+                rows.Add(smallReport);
+            }
+            return rows;
+        }
+        
 
         public List<Service> FillServices(IDataReader reader, List<Service> rows, int start, int pageLength)
         {
@@ -415,6 +458,101 @@ namespace DataBaseCommunication.DataProviders
             }
         }
 
+        internal bool ChangeClientsReports(ChangeClientReportsRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.Insert_Clients_Reports", conn);
+
+            AddInParameter(commandWrapper, "@CustomerID", DbType.Int32, request.ClientId);
+            AddInParameter(commandWrapper, "@ReportsId", DbType.String, request.ReportData);
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.Insert_Clients_Reports");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
+        internal bool DeleteRelatedCompany(DeleteRelatedCompanyRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.DeleteRelatedCompany", conn);
+
+            AddInParameter(commandWrapper, "@CustomerId", DbType.Int16, request.ClientId);
+            AddInParameter(commandWrapper, "@RelatedCustomerId", DbType.Int16, request.RelatedClientId);
+
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.DeleteRelatedCompany");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
+        internal bool InsertRelatedComapny(AddRelatedCompanyRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.Insert_RelatedCompany", conn);
+
+            AddInParameter(commandWrapper, "@CustomerId", DbType.Int16, request.ClientId);
+            AddInParameter(commandWrapper, "@RelatedCustomerId", DbType.Int16, request.RelatedClientId);
+
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.Insert_RelatedCompany");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
         public bool LogTime(LogTimeRequest request)
         {
             var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
@@ -514,11 +652,11 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@TypeID", DbType.Int32, reportData.TypeID);
             AddInParameter(commandWrapper, "@ColumnName", DbType.String, reportData.ColumnName);
             AddInParameter(commandWrapper, "@TextValue", DbType.String, reportData.TextValue);
-            AddInParameter(commandWrapper, "@DateValue", DbType.DateTime, reportData.DateValue < new DateTime(1753,1,1) ? new DateTime(1753,1,1) : reportData.DateValue);
+            AddInParameter(commandWrapper, "@DateValue", DbType.DateTime, reportData.DateValue < new DateTime(1753, 1, 1) ? new DateTime(1753, 1, 1) : reportData.DateValue);
             AddInParameter(commandWrapper, "@BoolValue", DbType.Boolean, reportData.BoolValue);
             AddInParameter(commandWrapper, "@Year", DbType.Int32, reportData.Year);
             AddInParameter(commandWrapper, "@Month", DbType.Int32, reportData.Month);
-            
+
 
             IDataReader reader = null;
             List<DataBaseChange> tmp = new List<DataBaseChange>();
@@ -531,7 +669,7 @@ namespace DataBaseCommunication.DataProviders
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var test = "testt";
                 return false;
@@ -603,7 +741,7 @@ namespace DataBaseCommunication.DataProviders
             try
             {
                 conn.Open();
-                
+
                 using (SqlDataReader rdr = commandWrapper.ExecuteReader())
                 {
                     // iterate through results, printing each to console
@@ -679,7 +817,7 @@ namespace DataBaseCommunication.DataProviders
 
             AddInParameter(commandWrapper, "@ClientID", DbType.Int32, request.ClientId);
             AddInParameter(commandWrapper, "@ReportID", DbType.Int32, request.ReportId);
-        
+
 
             IDataReader reader = null;
             List<DataBaseChange> tmp = new List<DataBaseChange>();
@@ -720,7 +858,7 @@ namespace DataBaseCommunication.DataProviders
                         rd.BoolValue = false;
                         rd.TextValue = "";
                         rd.DateValue = new DateTime(1753, 1, 1);
-                       
+
                         ret.Add(rd);
                     }
                 }
@@ -789,6 +927,32 @@ namespace DataBaseCommunication.DataProviders
             }
         }
 
+        public List<RelatedCompany> GetRelatedCompanies(RelatedCompaniesRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.Get_Related_Companies", conn);
+
+            AddInParameter(commandWrapper, "@CustomerNumber", DbType.Int32, request.ClientId);
+
+            IDataReader reader = null;
+            List<RelatedCompany> tmp = new List<RelatedCompany>();
+            try
+            {
+                conn.Open();
+                reader = commandWrapper.ExecuteReader();
+                FillRelatedCompanies(reader, tmp, 0, int.MaxValue);
+                MakeDboLog(request.ToString(), reader.ToString(), "dbo.Get_Related_Companies");
+                return tmp;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
 
         public bool ChangeClientData(UpdateClientRequest request)
         {
@@ -826,6 +990,9 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@DeliveryMethod", DbType.String, request.Client.DeliveryMethod);
             AddInParameter(commandWrapper, "@AdditionalMails", DbType.String, request.Client.AdditionalMails);
             AddInParameter(commandWrapper, "@CourierDay", DbType.Int32, request.Client.CourierDay);
+            AddInParameter(commandWrapper, "@BillFirm", DbType.Int32, request.Client.BillFirm);
+            AddInParameter(commandWrapper, "@DateFrom", DbType.DateTime, request.Client.DateFrom);
+            AddInParameter(commandWrapper, "@DateTo", DbType.DateTime, request.Client.DateTo);
 
 
 
@@ -889,6 +1056,10 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@DeliveryMethod", DbType.String, request.Client.DeliveryMethod);
             AddInParameter(commandWrapper, "@AdditionalMails", DbType.String, request.Client.AdditionalMails);
             AddInParameter(commandWrapper, "@CourierDay", DbType.Int32, request.Client.CourierDay);
+            AddInParameter(commandWrapper, "@BillFirm", DbType.Int32, request.Client.BillFirm);
+            AddInParameter(commandWrapper, "@DateFrom", DbType.DateTime, request.Client.DateFrom == DateTime.MinValue ? System.Data.SqlTypes.SqlDateTime.MinValue : request.Client.DateFrom);
+            AddInParameter(commandWrapper, "@DateTo", DbType.DateTime, request.Client.DateTo == DateTime.MinValue ? System.Data.SqlTypes.SqlDateTime.MinValue : request.Client.DateTo);
+
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
             AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);

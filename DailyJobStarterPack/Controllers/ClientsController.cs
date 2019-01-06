@@ -45,12 +45,20 @@ namespace DailyJobStarterPack.Controllers
             {
                 Clients = SessionData.Clients
             };
+
+            var request = _clientsMapper.GetReportsRequest(-1);
+            var result = _clientsService.GetReports(request);
+
+            ViewData["reports"] = result.Reports;
+
             return View(response);
         }
 
         [HttpPost]
-        public ActionResult Index(ClientsSearchCriteria criteria)
+        public ActionResult Index(FormCollection form, ClientsSearchCriteria criteria)
         {
+            var reports = form["ReportId"];
+            criteria.ReportId = reports;
             var filteredClients = ClientsHelper.ApplyClientsSearchCriteria(criteria, SessionData.Clients);
 
             if (!string.IsNullOrEmpty(criteria.ReportType))
@@ -72,6 +80,12 @@ namespace DailyJobStarterPack.Controllers
                 Clients = filteredClients,
                 ClientsSearchCriteria = criteria
             };
+
+            var request = _clientsMapper.GetReportsRequest(-1);
+            var result = _clientsService.GetReports(request);
+
+            ViewData["reports"] = result.Reports;
+
             return View(response);
         }
 
@@ -131,9 +145,9 @@ namespace DailyJobStarterPack.Controllers
             return View(result);
         }
 
-        public ActionResult DeleteClient(int clientId)
+        public ActionResult DeleteClient(int clientId, string reason)
         {
-            var request = _clientsMapper.GetUpdateClientStatusRequest(clientId, 0, SessionData.User.Role, SessionData.User.Team.Id);
+            var request = _clientsMapper.GetUpdateClientStatusRequest(clientId, 0, SessionData.User.Role, SessionData.User.Team.Id, reason);
             var result = _clientsService.UpdateClientStatus(request);
 
             if (result.isSuccessful)
@@ -144,9 +158,25 @@ namespace DailyJobStarterPack.Controllers
             return Json(result);
         }
 
+        public ActionResult DeleteRelatedCompany(int companyId, int relatedCompanyId)
+        {
+            var request = _clientsMapper.GetDeleteRelatedCompanyRequest(companyId, relatedCompanyId);
+            var result = _clientsService.DeleteRelatedComapny(request);
+
+            return Json(result);
+        }
+
+        public ActionResult AddNewRelatedCompany(int companyId, int relatedCompanyId)
+        {
+            var request = _clientsMapper.GetAddRelatedCompanyRequest(companyId, relatedCompanyId);
+            var result = _clientsService.AddRelatedComapny(request);
+
+            return Json(result);
+        }
+
         public ActionResult ActivateClient(int clientId)
         {
-            var request = _clientsMapper.GetUpdateClientStatusRequest(clientId, 1, SessionData.User.Role, SessionData.User.Team.Id);
+            var request = _clientsMapper.GetUpdateClientStatusRequest(clientId, 1, SessionData.User.Role, SessionData.User.Team.Id, "");
             var result = _clientsService.UpdateClientStatus(request);
 
             if (result.isSuccessful)
@@ -187,8 +217,11 @@ namespace DailyJobStarterPack.Controllers
                     }
                     else
                     {
-                        var localAmount = nbsService.ChangeToRsd(sessionClient.AmountCode, "rsd", sessionClient.Amount, "sre");
-                        sessionClient.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                        if(sessionClient.Amount > 0)
+                        {
+                            var localAmount = nbsService.ChangeToRsd(sessionClient.AmountCode, "rsd", sessionClient.Amount, "sre");
+                            sessionClient.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                        }
                     }
                 }
 
@@ -217,6 +250,15 @@ namespace DailyJobStarterPack.Controllers
             var result = _clientsService.GetReports(request);
 
             return PartialView("_reportsList", result.Reports);
+        }
+
+        [HttpGet]
+        public ActionResult GetRelatedCompanies(int clientId)
+        {
+            var request = _clientsMapper.GetRelatedCompaniesRequest(clientId);
+            var result = _clientsService.GetRelatedCompanies(request);
+
+            return PartialView("_relatedCompanies", result.RelatedCompanies);
         }
 
         [HttpPost]
@@ -256,8 +298,36 @@ namespace DailyJobStarterPack.Controllers
             return null;
         }
 
-        public ActionResult ChageReports(List<Report> Reports, int clientId)
+        public ActionResult ChageReports(FormCollection form, int clientId)
         {
+            var newReportIds = form["ReportId"] as string;
+            var request = _clientsMapper.GetChangeClientReportsReqeuest(clientId, newReportIds);
+            var result = _clientsService.ChangeClientReports(request);
+
+
+            //updateing clients
+            var requestForClients = _clientsMapper.GetAllClientsRequest(SessionData.User.Role, SessionData.User.Team.Id);
+            var resultForClients = _clientsService.GetAllClients(requestForClients);
+
+            var nbsService = new NBSService();
+            //exchange if needed
+            foreach (var client in resultForClients.Clients)
+            {
+                if (client.AmountCode.ToLower() == "rsd")
+                {
+                    client.LocalAmount = client.Amount;
+                }
+                else
+                {
+                    if (client.Amount > 0 && !string.IsNullOrEmpty(client.AmountCode))
+                    {
+                        var localAmount = nbsService.ChangeToRsd(client.AmountCode, "rsd", client.Amount, "sre");
+                        client.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                    }
+                }
+            }
+
+            SessionData.Clients = resultForClients.Clients;
 
             return RedirectToAction("Details", new { clientId = clientId });
         }
@@ -305,8 +375,11 @@ namespace DailyJobStarterPack.Controllers
                     }
                     else
                     {
-                        var localAmount = nbsService.ChangeToRsd(sessionClient.AmountCode, "rsd", sessionClient.Amount, "sre");
-                        sessionClient.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                        if(sessionClient.Amount > 0)
+                        {
+                            var localAmount = nbsService.ChangeToRsd(sessionClient.AmountCode, "rsd", sessionClient.Amount, "sre");
+                            sessionClient.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                        }
                     }
                 }
 

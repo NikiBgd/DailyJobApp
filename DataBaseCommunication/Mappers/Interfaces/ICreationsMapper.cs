@@ -17,5 +17,6 @@ namespace DataBaseCommunication.Mappers.Interfaces
         UpdateDoneStatusRequest GetUpdateDoneStatusRequest(Creation creation);
         AddCreationRequest GetAddCreationRequest(Creation creation);
         UpdateCreationRequest GetUpdateCreationRequest(Creation creation);
+        DeleteCreationRequest GetDeleteCreationRequest(int creationId);
     }
 }

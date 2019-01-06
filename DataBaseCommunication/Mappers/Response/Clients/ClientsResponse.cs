@@ -60,6 +60,12 @@ namespace DataBaseCommunication.Mappers.Response.Clients
         public List<ClientProfile> NewClientsList { get; set; }
     }
 
+    public class ChangeClientReportsResponse : Response
+    {
+        public bool isSuccessful { get; set; }
+        public List<Report> NewReportsList { get; set; }
+    }
+
     public class ClientChangesResponse : Response
     {
         public List<DataBaseChange> Changes { get; set; }
@@ -80,5 +86,20 @@ namespace DataBaseCommunication.Mappers.Response.Clients
     public class ReportsResponse : Response
     {
         public List<Report> Reports { get; set; }
+    }
+
+    public class RelatedCompaniesResponse : Response
+    {
+        public List<RelatedCompany> RelatedCompanies { get; set; }
+    }
+
+    public class DeleteRelatedCompanyResponse : Response
+    {
+        public bool isSuccessful { get; set; }
+    }
+
+    public class AddRelatedCompanyResponse : Response
+    {
+        public bool isSuccessful { get; set; }
     }
 }

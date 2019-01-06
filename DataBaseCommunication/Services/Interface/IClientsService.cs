@@ -27,6 +27,9 @@ namespace DataBaseCommunication.Services.Interface
         List<ReportData> GetUniqueReportData(GetReportDetailsRequest request);
         bool UpdateReportData(UpdateReportDataRequest request);
         bool InsertReportData(InsertReportDataRequest request);
-
+        ChangeClientReportsResponse ChangeClientReports(ChangeClientReportsRequest request);
+        RelatedCompaniesResponse GetRelatedCompanies(RelatedCompaniesRequest request);
+        DeleteRelatedCompanyResponse DeleteRelatedComapny(DeleteRelatedCompanyRequest request);
+        AddRelatedCompanyResponse AddRelatedComapny(AddRelatedCompanyRequest request);
     }
 }

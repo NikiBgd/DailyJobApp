@@ -1,4 +1,5 @@
 ﻿@{ 
+    var methodName = (bool)ViewData["hasReport"] ? "UpdateReportData" : "InsertReportData";
     int monthlyPeriod = 0;
     int dateRelatedColumnNumbers = 0;
     var dictionary = new Dictionary<string, List<DailyJob.Models.ReportData>>();
@@ -39,23 +40,24 @@
     }
 }
 
-<table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
-    <tbody>
-        <tr>
-            @for (int i = 1; i <= dateRelatedColumnNumbers; i++)
+<div style="border:1px solid black; width: 100%; overflow-x:scroll;">
+    <table id="mytable" class="table table-bordred table-striped">
+        <tbody>
+            <tr>
+                @for (int i = 1; i <= dateRelatedColumnNumbers; i++)
             {
-                <th>@i</th>
+                    <th>@i</th>
             }
 
-            @foreach (var item in nonDateRelatedObjects)
+                @foreach (var item in nonDateRelatedObjects)
             {
-                <th>@item.ColumnName</th>
+                    <th>@item.ColumnName</th>
             }
-        </tr>
-    </tbody>
-    <tbody>
-        <tr>
-            @if (dateRelatedObjects != null && dateRelatedObjects.Count > 0)
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                @if (dateRelatedObjects != null && dateRelatedObjects.Count > 0)
             {
                 for (int i = monthlyPeriod; i <= 12; i = i + monthlyPeriod)
                 {
@@ -65,83 +67,83 @@
                     if (element != null)
                     {
 
-                        <td>
-                            @foreach (var val in element)
+                            <td>
+                                @foreach (var val in element)
                             {
                                 if (val.TypeID == 3)
                                 {
-                                    <input class="js-checkbox-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-year="@((int)ViewData["year"])" data-month="@i" data-type="@val.TypeID" data-name="@val.ColumnName" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br>
+                                        <input class="js-checkbox-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-year="@((int)ViewData["year"])" data-month="@i" data-type="@val.TypeID" data-name="@val.ColumnName" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br>
                                 }
 
                                 if (val.TypeID == 1)
                                 {
-                                    @val.ColumnName<br><input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
+                                        @val.ColumnName<br><input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
 
                                 }
 
                                 if (val.TypeID == 2)
                                 {
-                                    @val.ColumnName<br><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
+                                        @val.ColumnName<br><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering" data-month="@i">
                                 }
 
                             }
-                        </td>
+                            </td>
                     }
 
                 }
             }
 
 
-            @*@for (int i = 0; i < dateRelatedColumnNumbers - dictionary.Count; i++)
-            {
-                <td>
-                    @foreach (var val in firstList)
+                @*@for (int i = 0; i < dateRelatedColumnNumbers - dictionary.Count; i++)
                     {
-                        <input type="checkbox" name="@val.ColumnName" value="@val.BoolValue" data-year="@val.Year" data-month="@((i+1+dictionary.Count)*val.MonthlyPeriod)">@val.ColumnName<br>
-                    }
-                </td>
-            }*@
+                        <td>
+                            @foreach (var val in firstList)
+                            {
+                                <input type="checkbox" name="@val.ColumnName" value="@val.BoolValue" data-year="@val.Year" data-month="@((i+1+dictionary.Count)*val.MonthlyPeriod)">@val.ColumnName<br>
+                            }
+                        </td>
+                    }*@
 
-            @foreach (var val in nonDateRelatedObjects)
+                @foreach (var val in nonDateRelatedObjects)
             {
                 if (val.TypeID == 1)
                 {
-                   <td> <input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
-                    @*<td><a href="/Clients/Details?clientId=4">@val.TextValue</a></td>*@
+                        <td> <input class="js-text-value" type="text" id="@val.ColumnName" name="@val.ColumnName" value="@val.TextValue" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
+                        @*<td><a href="/Clients/Details?clientId=4">@val.TextValue</a></td>*@
                 }
 
                 if (val.TypeID == 3)
                 {
-                    <td><input class="js-bool-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br></td>
+                        <td><input class="js-bool-value" type="checkbox" name="@val.ColumnName" value="@val.BoolValue" @(val.BoolValue ? "checked" : "") data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering">@val.ColumnName<br></td>
                 }
 
                 if (val.TypeID == 2)
                 {
-                    <td><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
-                    @*<td><a href="/Clients/Details?clientId=4">@val.DateValue.ToString()</a></td>*@
+                        <td><input class="js-date-value" type="date" id="@val.ColumnName" name="@val.ColumnName" value="@val.DateValue.ToString("yyyy-MM-dd")" data-type="@val.TypeID" data-name="@val.ColumnName" data-year="@((int)ViewData["year"])" data-date-related="@val.IsDateRelated" data-monthly-period="@val.MonthlyPeriod" data-ordering="@val.Ordering"></td>
+                        @*<td><a href="/Clients/Details?clientId=4">@val.DateValue.ToString()</a></td>*@
                 }
             }
-        </tr>
-    </tbody>
-</table>
-
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 
 <div class="form-group">
-    <div class="js-save-report">
-        <input type="submit" value="Save" class="btn btn-info" />
+    <div class="">
+        <a href="@Url.Action("Details", "Clients")?ClientID=@ViewData["clientId"]" class="btn btn-danger" >Nazad</a>
+        <input type="submit" value="Sacuvaj" class="btn btn-info js-save-report " />
     </div>
     </br>
     </br>
     <div>
-        <a class="btn btn-info" href="/Clients/GetReportDetails?ClientID=@((long)ViewData["clientId"])&ReportID=@((long)ViewData["reportId"])&year=@((int)ViewData["year"]-1)">Previous Year</a>
-        <a class="btn btn-info" href="/Clients/GetReportDetails?ClientID=@((long)ViewData["clientId"])&ReportID=@((long)ViewData["reportId"])&year=@((int)ViewData["year"]+1)">Next Year</a>
+        <a class="btn btn-info" href="@Url.Action("GetReportDetails", "Clients")?ClientID=@((long)ViewData["clientId"])&ReportID=@((long)ViewData["reportId"])&year=@((int)ViewData["year"]-1)">Prethodna godina (@((int)ViewData["year"] - 1))</a>
+        <a class="btn btn-info" href="@Url.Action("GetReportDetails", "Clients")?ClientID=@((long)ViewData["clientId"])&ReportID=@((long)ViewData["reportId"])&year=@((int)ViewData["year"]+1)">Naredna godina (@((int)ViewData["year"] + 1))</a>
     </div>
 </div>
 
 <script>
     $(document).on("click", ".js-save-report", function () {
-        var methodName = '@((bool)ViewData["hasReport"] ? "UpdateReportData" : "InsertReportData")';
         var reportDataArray = [];
 
         //checkbox only(bool type)
@@ -271,7 +273,7 @@
         });
 
         $.ajax({
-            url: '/clients/' + methodName,
+            url: '@Url.Action(methodName, "Clients")',
             type: 'POST',
             data: {
                 ClientId: @((long)ViewData["clientId"]),

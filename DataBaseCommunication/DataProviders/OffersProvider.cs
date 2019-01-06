@@ -36,6 +36,8 @@ namespace DataBaseCommunication.DataProviders
             public const string MakeRent = "MakeRent";
             public const string CompanySubType = "CompanySubType";
             public const string CompanyType = "CompanyType";
+            public const string MakeRentType = "MakeRentType";
+            public const string Status = "Status";
         }
 
         public bool AddNewOffer(CreateNewOfferRequest request)
@@ -67,6 +69,7 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@Note", DbType.String, request.Offer.Note);
 
             AddInParameter(commandWrapper, "@MakeRent", DbType.Boolean, request.Offer.MakeRent);
+            AddInParameter(commandWrapper, "@MakeRentType", DbType.String, request.Offer.MakeRentType);
             AddInParameter(commandWrapper, "@CompanyType", DbType.String, request.Offer.CompanyType);
             AddInParameter(commandWrapper, "@CompanySubType", DbType.String, request.Offer.CompanySubType);
 
@@ -81,6 +84,95 @@ namespace DataBaseCommunication.DataProviders
 
                 var isProcedureSucced = Convert.ToBoolean(results);
                 MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.InsertOffer");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
+        public bool DeleteOffer(DeleteOfferRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.DeleteOffer", conn);
+
+            AddInParameter(commandWrapper, "@OfferId", DbType.Int16, request.OfferId);
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.DeleteOffer");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
+        public bool UpdateOffer(UpdateOfferRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.Update_Offer", conn);
+
+            AddInParameter(commandWrapper, "@OfferId", DbType.Int16, request.Offer.OfferId);
+
+            var services = "";
+            foreach (var service in request.Offer.Services)
+            {
+                services += service.ServiceId + ",";
+            }
+
+            AddInParameter(commandWrapper, "@Services", DbType.String, services.Substring(0, services.Length - 1));
+            AddInParameter(commandWrapper, "@Mail", DbType.String, request.Offer.Mail);
+            AddInParameter(commandWrapper, "@Name", DbType.String, request.Offer.Name);
+            AddInParameter(commandWrapper, "@PhoneNumber", DbType.String, request.Offer.PhoneNumber);
+            AddInParameter(commandWrapper, "@ClientType", DbType.String, request.Offer.CompanyType);
+            AddInParameter(commandWrapper, "@UserId", DbType.Int16, request.Offer.UserId);
+            AddInParameter(commandWrapper, "@Note", DbType.String, request.Offer.Note);
+            AddInParameter(commandWrapper, "@PIB", DbType.String, request.Offer.PIB);
+            AddInParameter(commandWrapper, "@Amount", DbType.Int32, request.Offer.Amount);
+            AddInParameter(commandWrapper, "@CompanySubType", DbType.String, request.Offer.CompanySubType);
+
+            AddInParameter(commandWrapper, "@AmountCurrency", DbType.String, request.Offer.AmountCurrency);
+            AddInParameter(commandWrapper, "@ContactPerson", DbType.String, request.Offer.ContactPerson);
+
+            AddInParameter(commandWrapper, "@HeardFrom", DbType.String, request.Offer.HeardFrom);
+            AddInParameter(commandWrapper, "@Impression", DbType.String, request.Offer.Impression);
+            AddInParameter(commandWrapper, "@BackInfo", DbType.String, request.Offer.BackInfo);
+            AddInParameter(commandWrapper, "@MakeRentType", DbType.String, request.Offer.MakeRentType);
+            AddInParameter(commandWrapper, "@Status", DbType.Int32, request.Offer.Status);
+
+            AddInParameter(commandWrapper, "@IsOurCreation", DbType. Boolean, request.Offer.IsOurCreation);
+            AddInParameter(commandWrapper, "@MakeRent", DbType.Boolean, request.Offer.MakeRent);
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.UpdateOffer");
 
                 var errorObject = GetParameterValue(commandWrapper, "@ERROR");
                 var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
@@ -156,8 +248,10 @@ namespace DataBaseCommunication.DataProviders
                     Name = DataHelper.GetString(reader[OffersFieldNames.Name]),
                     UserId = DataHelper.GetInteger(reader[OffersFieldNames.UserId]),
                     MakeRent = DataHelper.GetBoolean(reader[OffersFieldNames.MakeRent]),
+                    MakeRentType = DataHelper.GetString(reader[OffersFieldNames.MakeRentType]),
                     CompanySubType = DataHelper.GetString(reader[OffersFieldNames.CompanySubType]),
                     CompanyType = DataHelper.GetString(reader[OffersFieldNames.CompanyType]),
+                    Status = DataHelper.GetInteger(reader[OffersFieldNames.Status])
                 };
 
                 smallOfferProfile.Services = new List<Service>();

@@ -1,4 +1,5 @@
 ﻿using DailyJobStarterPack.DataBaseObjects;
+using DataBaseCommunication.Services.Clients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace DataBaseCommunication.Mappers.Response.Creations
     public class CurrentCreationsResponse : Response
     {
         public List<Creation> Creations { get; set; }
+        public CreationsSearchCriteria CreationsSearchCriteria { get; set; }
     }
 
     public class SendMailResponse : Response
@@ -25,6 +27,8 @@ namespace DataBaseCommunication.Mappers.Response.Creations
     public class UpdatePaymentStatusResponse : Response
     {
         public bool IsSucessful { get; set; }
+        public int CompanyForBill { get; set; }
+        public int CreationId { get; set; }
     }
 
     public class UpdateDoneStatusResponse : Response
@@ -38,6 +42,11 @@ namespace DataBaseCommunication.Mappers.Response.Creations
     }
 
     public class UpdateCreationResponse : Response
+    {
+        public bool IsSucessful { get; set; }
+    }
+
+    public class DeleteCreationResponse : Response
     {
         public bool IsSucessful { get; set; }
     }

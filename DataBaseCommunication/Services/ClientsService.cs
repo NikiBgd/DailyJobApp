@@ -482,5 +482,111 @@ namespace DataBaseCommunication.Services
             }
             return response;
         }
+
+        public ChangeClientReportsResponse ChangeClientReports(ChangeClientReportsRequest request)
+        {
+            var response = new ChangeClientReportsResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Update)
+                {
+                    response.isSuccessful = clientsProvider.ChangeClientsReports(request);
+                    if (response.isSuccessful)
+                    {
+
+                       
+                    }
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
+
+        public RelatedCompaniesResponse GetRelatedCompanies(RelatedCompaniesRequest request)
+        {
+            var response = new RelatedCompaniesResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Select)
+                {
+                    response.RelatedCompanies = clientsProvider.GetRelatedCompanies(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+
+            return response;
+        }
+
+        public DeleteRelatedCompanyResponse DeleteRelatedComapny(DeleteRelatedCompanyRequest request)
+        {
+            var response = new DeleteRelatedCompanyResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Delete)
+                {
+                    response.isSuccessful = clientsProvider.DeleteRelatedCompany(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
+
+        public AddRelatedCompanyResponse AddRelatedComapny(AddRelatedCompanyRequest request)
+        {
+            var response = new AddRelatedCompanyResponse { ResponseStatus = ResponseStatus.Success };
+
+            var clientsProvider = new ClientsProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Insert)
+                {
+                    response.isSuccessful = clientsProvider.InsertRelatedComapny(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
     }
 }

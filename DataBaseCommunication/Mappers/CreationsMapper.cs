@@ -67,6 +67,17 @@ namespace DataBaseCommunication.Mappers
             return request;
         }
 
+        public DeleteCreationRequest GetDeleteCreationRequest(int creationId)
+        {
+            var request = new DeleteCreationRequest()
+            {
+                CreationId = creationId,
+                ActionType = Requests.ActionType.Delete
+            };
+
+            return request;
+        }
+
         public UpdateDoneStatusRequest GetUpdateDoneStatusRequest(Creation creation)
         {
             var request = new UpdateDoneStatusRequest()

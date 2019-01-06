@@ -12,5 +12,7 @@ namespace DataBaseCommunication.Mappers.Interfaces
     {
         OffersRequest GetOffersRequest(int id, Role role);
         CreateNewOfferRequest GetCreateNewOfferRequest(Offer offer);
+        UpdateOfferRequest GetUpdateOfferRequest(Offer offer);
+        DeleteOfferRequest GetDeleteOfferRequest(int offerId);
     }
 }

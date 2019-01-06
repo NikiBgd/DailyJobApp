@@ -22,6 +22,17 @@ namespace DataBaseCommunication.Mappers
             return request;
         }
 
+        public DeleteOfferRequest GetDeleteOfferRequest(int offerId)
+        {
+            var request = new DeleteOfferRequest
+            {
+                OfferId = offerId,
+                ActionType = Requests.ActionType.Delete
+            };
+
+            return request;
+        }
+
         public OffersRequest GetOffersRequest(int id, Role role)
         {
             var request = new OffersRequest
@@ -33,5 +44,17 @@ namespace DataBaseCommunication.Mappers
 
             return request;
         }
+
+        public UpdateOfferRequest GetUpdateOfferRequest(Offer offer)
+        {
+            var request = new UpdateOfferRequest
+            {
+                Offer = offer,
+                ActionType = Requests.ActionType.Update
+            };
+
+            return request;
+        }
+
     }
 }

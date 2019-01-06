@@ -441,6 +441,53 @@
                             </div>
                         </div>
                     </div>
+
+                                    <div class="form-group">
+                    <label class="col-md-4 control-label" for="DateFrom">Period saradnje</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-envelope-o"></i>
+                            </div>
+                            <input id="DateFrom" name="DateFrom" type="text" class="form-control input-md" autocomplete="off" value="@Model.DateFrom">
+                            <script>
+                                $(function () {
+                                    $("#DateFrom").datepicker();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-envelope-o"></i>
+                            </div>
+                            <input id="DateTo" name="DateTo" type="text" class="form-control input-md" autocomplete="off" value="@Model.DateTo">
+                            <script>
+                                $(function () {
+                                    $("#DateTo").datepicker();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="BillFirm">Firma sa koje se kreiraju fakture</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-envelope-o"></i>
+                                </div>
+                                <select id="BillFirm" name="BillFirm" class="form-control" value="@Model.BillFirm">
+                                    @foreach (var firm in SessionData.Firms)
+                                    {
+                                        <option value="@firm.FirmId" @(Model.BillFirm == firm.FirmId ? "selected='selected'" : "")>@firm.FirmName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 }
 
                 <div class="form-group">

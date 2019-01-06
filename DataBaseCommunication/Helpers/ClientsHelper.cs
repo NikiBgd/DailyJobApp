@@ -82,6 +82,15 @@ namespace DataBaseCommunication.Helpers
                 list = list.Where(x => x.ActivityCode.ToLower().Contains(searchTerm)).ToList();
             }
 
+            if (!string.IsNullOrEmpty(criteria.ReportId))
+            {
+                var ids = criteria.ReportId.Split(',');
+                foreach (var id in ids)
+                {
+                    list = list.Where(x => x.Reports.Any(y => y == Int32.Parse(id))).ToList();
+                }
+            }
+
             return list;
         }
 

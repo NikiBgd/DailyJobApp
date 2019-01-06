@@ -55,6 +55,7 @@ namespace DataBaseCommunication.Mappers.Requests.Clients
         public int Status { get; set; }
         public Role Role { get; set; }
         public int TeamId { get; set; }
+        public string Reason { get; set; }
     }
 
     public class UpdateClientServicesRequest : Request
@@ -110,5 +111,28 @@ namespace DataBaseCommunication.Mappers.Requests.Clients
         public long ClientId { get; set; }
         public long ReportId { get; set; }
         public List<ReportData> ReportData { get; set; }
+    }
+
+    public class ChangeClientReportsRequest : Request
+    {
+        public long ClientId { get; set; }
+        public string ReportData { get; set; }
+    }
+
+    public class RelatedCompaniesRequest : Request
+    {
+        public long ClientId { get; set; }
+    }
+
+    public class DeleteRelatedCompanyRequest : Request
+    {
+        public long ClientId { get; set; }
+        public long RelatedClientId { get; set; }
+    }
+
+    public class AddRelatedCompanyRequest : Request
+    {
+        public long ClientId { get; set; }
+        public long RelatedClientId { get; set; }
     }
 }

@@ -17,5 +17,6 @@ namespace DataBaseCommunication.Services.Interface
         UpdateDoneStatusResponse UpdateDoneStatus(UpdateDoneStatusRequest request);
         AddCreationResponse AddCreation(AddCreationRequest request);
         UpdateCreationResponse UpdateCreation(UpdateCreationRequest request);
+        DeleteCreationResponse DeleteCreation(DeleteCreationRequest request);
     }
 }

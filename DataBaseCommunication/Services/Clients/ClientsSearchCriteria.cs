@@ -40,5 +40,6 @@ namespace DataBaseCommunication.Services.Clients
         public DateTime BirthDate { get; set; }
         public DateTime ResponsiblePersonBirthDate { get; set; }
         public string DeliveryMethod { get; set; }
+        public string ReportId { get; set; }
     }
 }

@@ -38,12 +38,17 @@
 
 <div class="form-group">
     <div>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=1">Mesecni prikaz</a>
+        <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=3">Tromesecni prikaz</a>
+    </div>
+</div>
+
+<div class="form-group">
+    <div>
         <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=@period&size=@(size-1)">Prethodni period</a>
         <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=@period&size=@(size+1)">Naredni period</a>
     </div>
 </div>
-
-
 
 <table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
     <tbody>
@@ -87,7 +92,7 @@
                         <input class="js-client-id" type="checkbox" name="ClientCheckbox" data-client-id="@client.CustomerID"><br>
                     </td>
                     <td>
-                        <div>@client.Name</div>
+                        <div><a href="@Url.Action("ClientBilling", "Billing")?year=@year&clientId=@client.CustomerID">@client.Name</a></div>
                     </td>
 
 
@@ -123,7 +128,7 @@
                         <input class="js-client-id" type="checkbox" name="ClientCheckbox" data-client-id="@client.CustomerID"><br>
                     </td>
                     <td>
-                        <div>@client.Name</div>
+                        <div><a href="@Url.Action("ClientBilling", "Billing")?year=@year&clientId=@client.CustomerID">@client.Name</a></div>
                     </td>
 
                     @if (hasRecords)
@@ -218,7 +223,7 @@
         };
 
         $.ajax({
-            url: '/Billing/UpdateClientBillings',
+            url: '@Url.Action("UpdateClientBillings", "Billing")',
             type: 'POST',
             contentType: "application/json",
             data: JSON.stringify(dataToSend),

@@ -39,7 +39,6 @@ namespace DataBaseCommunication.Services
             return response;
         }
 
-
         public CurrentCreationsResponse GetCurrentCreations(CurrentCreationsRequest request)
         {
             var response = new CurrentCreationsResponse { ResponseStatus = ResponseStatus.Success };
@@ -125,6 +124,31 @@ namespace DataBaseCommunication.Services
                 if (request.ActionType == ActionType.Update)
                 {
                     response.IsSucessful = creationsProvider.UpdateCreation(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
+
+        public DeleteCreationResponse DeleteCreation(DeleteCreationRequest request)
+        {
+            var response = new DeleteCreationResponse { ResponseStatus = ResponseStatus.Success };
+
+            var creationsProvider = new CreationsProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Delete)
+                {
+                    response.IsSucessful = creationsProvider.DeleteCreation(request);
                 }
                 else
                 {

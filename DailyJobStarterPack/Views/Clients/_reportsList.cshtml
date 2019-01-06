@@ -15,7 +15,18 @@
             @foreach (var report in Model.Take(totalCountHalf))
             {
                 <div class="checkbox">
-                    <label><input type="checkbox" name="ReportId" value="@report.ReportId" @(report.Using ? "checked" : "")><a href="@Url.Action("DownloadReport", "Clients", new { reportId = report.ReportId, clientId = Request.QueryString["clientId"] })">@report.ReportName</a></label>
+                    <label>
+                        <input type="checkbox" name="ReportId" value="@report.ReportId" @(report.Using ? "checked" : "")>
+                        @if (report.Using)
+                        {
+                            <a href="@Url.Action("GetReportDetails", "Clients", new { reportId = report.ReportId, clientId = Request.QueryString["clientId"], year = DateTime.Now.Year })">@report.ReportName</a>
+                        }
+                        else
+                        {
+                            <span>@report.ReportName</span>
+                        }
+                    </label>
+
                 </div>
             }
         </div>
@@ -23,7 +34,17 @@
             @foreach (var report in Model.Skip(totalCountHalf))
             {
                 <div class="checkbox">
-                    <label><input type="checkbox" name="ReportId" value="@report.ReportId" @(report.Using ? "checked" : "")><a href="@Url.Action("DownloadReport", "Clients", new { reportId = report.ReportId, clientId = Request.QueryString["clientId"] })">@report.ReportName</a></label>
+                    <label>
+                        <input type="checkbox" name="ReportId" value="@report.ReportId" @(report.Using ? "checked" : "")>
+                        @if (report.Using)
+                        {
+                            <a href="@Url.Action("GetReportDetails", "Clients", new { reportId = report.ReportId, clientId = Request.QueryString["clientId"] , year = DateTime.Now.Year})">@report.ReportName</a>
+                        }
+                        else
+                        {
+                            <span>@report.ReportName</span>
+                        }
+                    </label>
                 </div>
             }
         </div>

@@ -1,19 +1,42 @@
 ﻿@using DailyJobStarterPack.DataBaseObjects
 @using DailyJob.Helpers
 @using DailyJobStarterPack.Web.ViewModels.Security;
+@using DataBaseCommunication.Mappers.Response.Creations
+
+@model CurrentCreationsResponse
 
 <div class="row" style="margin-top: 50px;">
-    <div class="col-md-1"></div>
     <div class="col-md-11">
-        <a class="btn btn-success btn-xs" id="popup-button" href="@Url.Action("Create", "Creations")">
+        <a class="btn btn-success btn-xs" href="@Url.Action("Create", "Creations")">
             <span class="glyphicon glyphicon-plus"></span> Unseite novu ponudu
+        </a>
+        <a class="btn btn-success btn-xs" id="popup-button" href="#">
+            <span class="glyphicon glyphicon-filter"></span> Pretrazi ponude
         </a>
     </div>
 </div>
 
+<div class="row" style="margin-top: 50px;">
+    <div class="col-md-5">
+        Trenutno DOO: @Model.Creations.Count(x => x.ClientType == ClientType.DOO)
+        <br />
+        Trenutno preduzetnici: @Model.Creations.Count(x => x.ClientType == ClientType.Preduzetnik)
+         <br />
+        Trenutno udruzenja: @Model.Creations.Count(x => x.ClientType == ClientType.Udruzenje)
+    </div>
+    <div class="col-md-5">
+        Trenutno potvrdjenih: @Model.Creations.Count(x => x.IsAnswerSuccesful)
+        <br />
+        Trenutno obradjenih: @Model.Creations.Count(x => x.IsDone)
+        <br />
+        Trenutno poslat mail: @Model.Creations.Count(x => x.IsMailSent)
+        <br />
+        Trenutno placeno: @Model.Creations.Count(x => x.IsPaid)
+    </div>
+</div>
+
 <div class="row" style="margin-top: 10px;">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>
@@ -21,7 +44,7 @@
                         Aktivne ponude osnivanja
                     </div>
                     <div class="col-md-1 task-number task-number-active">
-                        <span style="margin-left: -5px">@SessionData.Creations.Count(x => !x.IsDone)</span>
+                        <span style="margin-left: -5px">@Model.Creations.Count(x => !x.IsDone)</span>
                     </div>
                 </h4>
                 <div class="row">
@@ -31,6 +54,10 @@
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
                         <tr>
+                            @if (SessionData.User.Role == Role.Admin)
+                            {
+                                <th></th>
+                            }
                             <th>Datum ponude</th>
                             <th>Tip posla</th>
                             <th>Datum slanja formulara</th>
@@ -39,16 +66,28 @@
                             <th>Telefon</th>
                             <th>Tip klijenta</th>
                             <th>Status</th>
-                            <th>Tip placanja</th>
-                            <th>Napomena</th>
+                            <th>Procenat zavrsenosti</th>
                             <th>Opcije</th>
                         </tr>
                         <tbody>
-                            @foreach (var creation in SessionData.Creations.Where(x => !x.IsDone).OrderByDescending(x => x.CreationDate))
+                            @foreach (var creation in Model.Creations.Where(x => !x.IsDone).OrderByDescending(x => x.CreationDate))
                             {
+                                var proccessingPercent = (decimal)0;
+                                if (creation.Services.Any())
+                                {
+                                    proccessingPercent = decimal.Round((decimal)creation.ServicesDone.Count / creation.Services.Count, 2, MidpointRounding.AwayFromZero) * 100;
+                                }
                                 var serviceNames = "";
                                 creation.Services.ForEach(x => serviceNames += x.ServiceName + "<br>");
                                 <tr>
+                                    @if (SessionData.User.Role == Role.Admin)
+                                    {
+                                        <td>
+                                            <button class="btn btn-danger btn-xs confirm-delete" data-id="@creation.CreationId">
+                                                <span class="glyphicon glyphicon-trash"></span> Obrisi
+                                            </button>
+                                        </td>
+                                    }
                                     <td>@creation.CreationDate</td>
                                     <td>@Html.Raw(serviceNames)</td>
                                     <td>@(creation.FormularDate == null || creation.FormularDate == DateTime.MinValue ? "-" : creation.FormularDate.ToShortDateString())</td>
@@ -57,8 +96,7 @@
                                     <td>@creation.PhoneNumber</td>
                                     <td>@ResourcesHelper.GetClientType(creation.ClientType)</td>
                                     <td>@ResourcesHelper.GetClientStatus(creation.Status)</td>
-                                    <td>@ResourcesHelper.GetClientPaymentMethod(creation.PaymentMethod)</td>
-                                    <td>@creation.Note</td>
+                                    <td>@proccessingPercent %</td>
                                     <td>
                                         @if (!creation.IsMailSent)
                                         {
@@ -74,7 +112,7 @@
                                         }
                                         else
                                         {
-                                            <a href="@Url.Action("PrintDocuments", "Creations", new { creationId = creation.CreationId })"class="btn btn-info btn-xs btn-block" data-id="@creation.CreationId">
+                                            <a href="@Url.Action("PrintDocuments", "Creations", new { creationId = creation.CreationId })" class="btn btn-info btn-xs btn-block" data-id="@creation.CreationId">
                                                 Preuzmi sablone
                                             </a>
                                         }
@@ -115,8 +153,7 @@
     </div>
 </div>
 <div class="row" style="margin-bottom: 50px; margin-top: 50px;">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>
@@ -124,7 +161,7 @@
                         Zavrsene ponude osnivanja
                     </div>
                     <div class="col-md-1 task-number">
-                        <span style="margin-left: -5px">@SessionData.Creations.Count(x => x.IsDone)</span>
+                        <span style="margin-left: -5px">@Model.Creations.Count(x => x.IsDone)</span>
                     </div>
                 </h4>
                 <div class="row">
@@ -134,6 +171,10 @@
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
                         <tr>
+                            @if (SessionData.User.Role == Role.Admin)
+                            {
+                                <th></th>
+                            }
                             <th>Datum osnivanja</th>
                             <th>Tip posla</th>
                             <th>Datum slanja formulara</th>
@@ -144,11 +185,19 @@
                             <th>Opcije</th>
                         </tr>
                         <tbody>
-                            @foreach (var creation in SessionData.Creations.Where(x => x.IsDone).OrderByDescending(x => x.CreationDate))
+                            @foreach (var creation in Model.Creations.Where(x => x.IsDone).OrderByDescending(x => x.CreationDate))
                             {
                                 var serviceNames = "";
                                 creation.Services.ForEach(x => serviceNames += x.ServiceName + "<br>");
                                 <tr>
+                                    @if (SessionData.User.Role == Role.Admin)
+                                    {
+                                        <td>
+                                            <button class="btn btn-danger btn-xs confirm-delete" data-id="@creation.CreationId">
+                                                <span class="glyphicon glyphicon-trash"></span> Obrisi
+                                            </button>
+                                        </td>
+                                    }
                                     <td>@creation.CreationDate</td>
                                     <td>@Html.Raw(serviceNames)</td>
                                     <td>@creation.FormularDate</td>
@@ -249,6 +298,29 @@
         <div class="modal-body">
             <p>Ovo je trajna izmena.</p>
             <p>Da li ste sigurni da zelite da oznacite da je klijent platio?</p>
+            <p>
+                <label class="radio-inline" for="payment-status-1">Kartica</label>
+                <input type="radio" id="payment-status-1" name="payment-status" value="1" />
+            </p>
+            <p>
+                <label class="radio-inline" for="payment-status-2">Kes</label>
+                <input type="radio" id="payment-status-2" name="payment-status" value="2" />
+            </p>
+            <p>
+                <label class="radio-inline" for="payment-status-3">Faktura</label>
+                <input type="radio" id="payment-status-3" name="payment-status" value="3" />
+            </p>
+
+            <div id="company-div">
+                <p>Odaberite firmu sa koje ce se vrsiti fakturisanje:</p>
+                @foreach (var firm in SessionData.Firms)
+                {
+                    <label class="radio" for="Firm-@firm.FirmId">
+                        <input type="radio" name="Firm" id="Firm-@firm.FirmId" value="@firm.FirmId">
+                        @firm.FirmName
+                    </label>
+                }
+            </div>
         </div>
         <div class="modal-footer">
             <a href="" class="btn danger" id="paid-sucess-confirm">Da</a>
@@ -271,6 +343,164 @@
             <a href="" class="btn danger" id="done-sucess-confirm">Da</a>
             <a href="#" data-dismiss="modal" class="btn secondary">Ne</a>
         </div>
+    </div>
+</div>
+
+<div id="modal-from-dom" class="modal hide overlay">
+    <div class="popup">
+        <div class="modal-header">
+            <a href="#" data-dismiss="modal" class="close">&times;</a>
+            <h3>Brisanje ponude</h3>
+        </div>
+        <div class="modal-body">
+            <p>Trajno cete obrisati ponudu iz sistema.</p>
+            <p>Da li ste sigurni da zelite da nastavite?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="" class="btn danger" id="delete-confirm">Da</a>
+            <a href="#" data-dismiss="modal" class="btn secondary">Ne</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup1" class="overlay" style="display:none;">
+    <br />
+    <div class="popup popup-form">
+        @using (Html.BeginForm("Index", "Creations", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "clientsForm" }))
+        {
+            <h2>Pretraga ponuda</h2>
+            <a class="close" href="javascript: hidePopUp()">&times;</a>
+            <div class="content">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Name">Naziv</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-user">
+                                    </i>
+                                </div>
+                                <input id="Name" name="Name" type="text" class="form-control input-md" value="@Model.CreationsSearchCriteria.Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="DateFrom">Datum od</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-briefcase">
+                                    </i>
+                                </div>
+                                <input id="DateFrom" name="DateFrom" type="text" class="form-control input-md" value="@Model.CreationsSearchCriteria.DateFrom" autocomplete="off">
+                                <script>
+                                    $(function () {
+                                        $("#DateFrom").datepicker();
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="DateTo">Datum do</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-briefcase">
+                                    </i>
+                                </div>
+                                <input id="DateTo" name="DateTo" type="text" class="form-control input-md" value="@Model.CreationsSearchCriteria.DateTo" autocomplete="off">
+                                <script>
+                                    $(function () {
+                                        $("#DateTo").datepicker();
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="ClientType">Vrsta klijenta</label>
+                        <div class="col-md-4">
+                            <label class="radio-inline" for="ClientType-0">
+                                <input type="radio" name="ClientType" id="ClientType-0" value="@((int)ClientType.DOO)" @(Model.CreationsSearchCriteria.ClientType != null && (ClientType)Model.CreationsSearchCriteria.ClientType == ClientType.DOO ? "checked" : "")>
+                                @ResourcesHelper.GetClientType(ClientType.DOO)
+                            </label>
+                            <label class="radio-inline" for="ClientType-1">
+                                <input type="radio" name="ClientType" id="ClientType-1" value="@((int)ClientType.Preduzetnik)" @(Model.CreationsSearchCriteria.ClientType != null && (ClientType)Model.CreationsSearchCriteria.ClientType == ClientType.Preduzetnik ? "checked" : "")>
+                                @ResourcesHelper.GetClientType(ClientType.Preduzetnik)
+                            </label>
+                            <label class="radio-inline" for="ClientType-2">
+                                <input type="radio" name="ClientType" id="ClientType-2" value="@((int)ClientType.Udruzenje)" @(Model.CreationsSearchCriteria.ClientType != null && (ClientType)Model.CreationsSearchCriteria.ClientType == ClientType.Udruzenje ? "checked" : "")>
+                                @ResourcesHelper.GetClientType(ClientType.Udruzenje)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="IsPaid">Placeno</label>
+                        <div class="col-md-4">
+                            <label class="radio-inline" for="IsPaid-0">
+                                <input type="radio" name="IsPaid" id="IsPaid-0" value="false" @(Model.CreationsSearchCriteria.IsPaid != null && Model.CreationsSearchCriteria.IsPaid == false ? "checked" : "")>
+                                NE
+                            </label>
+                            <label class="radio-inline" for="IsPaid-1">
+                                <input type="radio" name="IsPaid" id="IsPaid-1" value="true" @(Model.CreationsSearchCriteria.IsPaid != null && Model.CreationsSearchCriteria.IsPaid == true ? "checked" : "")>
+                                DA
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="IsConfirmed">Potvrdjeno</label>
+                        <div class="col-md-4">
+                            <label class="radio-inline" for="IsConfirmed-0">
+                                <input type="radio" name="IsConfirmed" id="IsConfirmed-0" value="false" @(Model.CreationsSearchCriteria.IsConfirmed != null && Model.CreationsSearchCriteria.IsConfirmed == false ? "checked" : "")>
+                                NE
+                            </label>
+                            <label class="radio-inline" for="IsConfirmed-1">
+                                <input type="radio" name="IsConfirmed" id="IsConfirmed-1" value="true" @(Model.CreationsSearchCriteria.IsConfirmed != null && Model.CreationsSearchCriteria.IsConfirmed == true ? "checked" : "")>
+                                DA
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="IsCanceled">Otkazano</label>
+                        <div class="col-md-4">
+                            <label class="radio-inline" for="IsCanceled-0">
+                                <input type="radio" name="IsCanceled" id="IsCanceled-0" value="false" @(Model.CreationsSearchCriteria.IsCanceled != null && Model.CreationsSearchCriteria.IsCanceled == false ? "checked" : "")>
+                                NE
+                            </label>
+                            <label class="radio-inline" for="IsCanceled-1">
+                                <input type="radio" name="IsCanceled" id="IsCanceled-1" value="true" @(Model.CreationsSearchCriteria.IsCanceled != null && Model.CreationsSearchCriteria.IsCanceled == true ? "checked" : "")>
+                                DA
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="IsCompleted">Uradjeno</label>
+                        <div class="col-md-4">
+                            <label class="radio-inline" for="IsCompleted-0">
+                                <input type="radio" name="IsCompleted" id="IsCompleted-0" value="false" @(Model.CreationsSearchCriteria.IsCompleted != null && Model.CreationsSearchCriteria.IsCompleted == false ? "checked" : "")>
+                                NE
+                            </label>
+                            <label class="radio-inline" for="IsCompleted-1">
+                                <input type="radio" name="IsCompleted" id="IsCompleted-1" value="true" @(Model.CreationsSearchCriteria.IsCompleted != null && Model.CreationsSearchCriteria.IsCompleted == true ? "checked" : "")>
+                                DA
+                            </label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript: hidePopUp()" data-dismiss="modal" class="btn secondary">Odustani</a>
+                <a href="javascript: submitForm('clientsForm')" data-dismiss="modal" class="btn secondary">U redu</a>
+            </div>
+        }
     </div>
 </div>
 
@@ -338,8 +568,6 @@
            data: { 'creationId': id},
            dataType: "json",
            success: function (result) {
-               debugger;
-
                if (result.IsSucessful)
                {
                    $('.modal-body').html('<p>Uspesno ste izmenili status odgovora.</p>')
@@ -373,18 +601,27 @@
     });
 
     function UpdatePaymentStatus(id) {
+        var type = $('input[name=payment-status]:checked').val();
+        var companyId = $('input[name=Firm]:checked').val();
+
          $.ajax({
            type: "POST",
            url: "@Url.Action("UpdatePaymentStatus", "Creations")",
-           data: { 'creationId': id},
+           data: 'creationId=' + id + '&type=' + type + '&companyId=' + companyId,
            dataType: "json",
            success: function (result) {
                debugger;
 
                if (result.IsSucessful)
                {
-                   $('.modal-body').html('<p>Uspesno ste izmenili status placanja.</p>')
-                   $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+                   if (result.CompanyForBill != 0) {
+                       $('.modal-body').html('<p>Uspesno ste izmenili statu placanja.</p>')
+                       $('.modal-footer').html('<a href="@Url.Action("CreateBillForCreation", "Bills")?companyId=' + result.CompanyForBill + '&creationId=' + result.CreationId + '" class="btn secondary">Kreiraj fakturu</a>');
+                   }
+                   else {
+                       $('.modal-body').html('<p>Uspesno ste izmenili statu placanja.</p>')
+                       $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+                   }
                }
                else
                {
@@ -439,4 +676,71 @@
            }
         });
     }
+
+    $('#modal-from-dom').on('show', function () {
+        var id = $(this).data('id'),
+            removeBtn = $(this).find('#delete-confirm');
+
+        removeBtn.attr('href', 'javascript: DeleteCreation(' + id + ')');
+    });
+
+    $('.confirm-delete').on('click', function (e) {
+        e.preventDefault();
+
+        var id = $(this).data('id');
+        $('#modal-from-dom').data('id', id).modal('show').trigger('show');
+    });
+
+
+    function DeleteCreation(id) {
+         $.ajax({
+           type: "POST",
+           url: "@Url.Action("DeleteCreation", "Creations")",
+           data: { 'CreationId': id},
+           dataType: "json",
+           success: function (result) {
+               if (result.IsSucessful)
+               {
+                   $('.modal-body').html('<p>Uspesno ste obrisali ponudu iz sistema.</p>')
+                   $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+               }
+               else
+               {
+                   $('.modal-body').html('<p>' + result.ResponseDescription + '</p>')
+                   $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+               }
+           },
+           error: function (response) {
+               $('.modal-body').html('<p>Doslo je do greske prilkom brisanja ponude iz sistema.</p>')
+               $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+           }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $("#popup-button").on("click", function () {
+            $("#popup1").css("display", "block");
+        });
+
+        $('#company-div').hide();
+    });
+
+    function submitForm(formId) {
+        $("#" + formId).submit();
+    }
+
+    function hidePopUp() {
+        $("#popup1").css("display", "none");
+    }
+
+    $('input[type=radio][name=payment-status]').change(function () {
+        if (this.value == '3') {
+            $('#company-div').show();
+        }
+        else
+        {
+            $('#company-div').hide();
+        }
+    });
 </script>

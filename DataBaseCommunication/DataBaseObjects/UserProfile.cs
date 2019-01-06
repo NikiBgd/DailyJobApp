@@ -34,7 +34,8 @@ namespace DailyJobStarterPack.DataBaseObjects
         public string LegalId { get; set; }
     }
 
-    public class WorkersOrder {
+    public class WorkersOrder
+    {
         public Courier Courier { get; set; }
         public ClientProfile Client { get; set; }
         public string Place { get; set; }
@@ -96,6 +97,10 @@ namespace DailyJobStarterPack.DataBaseObjects
         public int TotalMailNumber { get; set; }
         public int TotalMinutesNumber { get; set; }
         public int Status { get; set; }
+        public int BillFirm { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public List<int> Reports { get; set; }
     }
 
     public class ClientTime
@@ -159,6 +164,8 @@ namespace DailyJobStarterPack.DataBaseObjects
     {
         public int CreationId { get; set; }
         public string JobType { get; set; }
+        public string JobDone { get; set; }
+
         public DateTime CreationDate { get; set; }
         public DateTime FormularDate { get; set; }
         public string Mail { get; set; }
@@ -178,6 +185,7 @@ namespace DailyJobStarterPack.DataBaseObjects
         public int PaymentMethod { get; set; }
 
         public List<Service> Services { get; set; }
+        public List<Service>  ServicesDone { get; set; }
     }
 
 
@@ -195,6 +203,12 @@ namespace DailyJobStarterPack.DataBaseObjects
     {
         public int FirmId { get; set; }
         public string FirmName { get; set; }
+        public string LegalId { get; set; }
+        public string Mail { get; set; }
+        public string PhoneNumber { get; set; }
+        public string AccountNumber { get; set; }
+        public string Address { get; set; }
+        public string PIB { get; set; }
     }
 
     public class Time
@@ -227,6 +241,8 @@ namespace DailyJobStarterPack.DataBaseObjects
         public bool MakeRent { get; set; }
         public string CompanyType { get; set; }
         public string CompanySubType { get; set; }
+        public string MakeRentType { get; set; }
+        public int Status { get; set; }
 
         public List<Service> Services { get; set; }
     }
@@ -237,5 +253,11 @@ namespace DailyJobStarterPack.DataBaseObjects
         public int ReportId { get; set; }
         public string ReportName { get; set; }
         public bool Using { get; set; }
+    }
+
+    public class RelatedCompany
+    {
+        public int RelatedCompanyId { get; set; }
+        public string RelatedCompanyName { get; set; }
     }
 }

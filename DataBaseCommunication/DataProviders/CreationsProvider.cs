@@ -38,6 +38,7 @@ namespace DataBaseCommunication.DataProviders
             public const string PIB = "PIB";
             public const string Amount = "Amount";
             public const string CompanySubType = "CompanySubType";
+            public const string JobDone = "JobDone";
         }
 
         public List<Creation> FillCreations(IDataReader reader, List<Creation> rows, int start, int pageLength)
@@ -56,7 +57,7 @@ namespace DataBaseCommunication.DataProviders
                 var smallSettingProfile = new Creation
                 {
                     CreationId = DataHelper.GetInteger(reader[CreationsFieldNames.CreationId]),
-                    JobType =DataHelper.GetString(reader[CreationsFieldNames.JobType]),
+                    JobType = DataHelper.GetString(reader[CreationsFieldNames.JobType]),
                     CreationDate = DataHelper.GetDateTime(reader[CreationsFieldNames.CreationDate]),
                     PhoneNumber = DataHelper.GetString(reader[CreationsFieldNames.PhoneNumber]),
                     FormularDate = DataHelper.GetDateTime(reader[CreationsFieldNames.FormularDate]),
@@ -73,7 +74,8 @@ namespace DataBaseCommunication.DataProviders
                     PaymentMethod = DataHelper.GetInteger(reader[CreationsFieldNames.PaymentMethod]),
                     PIB = DataHelper.GetString(reader[CreationsFieldNames.PIB]),
                     CompanySubType = DataHelper.GetString(reader[CreationsFieldNames.CompanySubType]),
-                    Amount = DataHelper.GetInteger(reader[CreationsFieldNames.Amount])
+                    Amount = DataHelper.GetInteger(reader[CreationsFieldNames.Amount]),
+                    JobDone = DataHelper.GetString(reader[CreationsFieldNames.JobDone]),
                 };
 
                 rows.Add(smallSettingProfile);
@@ -128,6 +130,36 @@ namespace DataBaseCommunication.DataProviders
             }
         }
 
+        public bool DeleteCreation(DeleteCreationRequest request)
+        {
+            var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
+            var commandWrapper = GetStoredProcCommand("dbo.DeleteCreation", conn);
+
+            AddInParameter(commandWrapper, "@CreationId", DbType.Int16, request.CreationId);
+
+            AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
+            AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
+
+            try
+            {
+                conn.Open();
+                int results = commandWrapper.ExecuteNonQuery();
+
+                var isProcedureSucced = Convert.ToBoolean(results);
+                MakeDboLog(request.ToString(), isProcedureSucced.ToString(), "dbo.DeleteCreation");
+
+                var errorObject = GetParameterValue(commandWrapper, "@ERROR");
+                var errorCodeObject = GetParameterValue(commandWrapper, "@ERROR_CODE");
+
+                return Convert.ToBoolean(results);
+            }
+            finally
+            {
+                commandWrapper.Dispose();
+                conn.Close();
+            }
+        }
+
         internal bool UpdateCreation(UpdateCreationRequest request)
         {
             var conn = GetConnection(ConnectionNames.CSPSqlDatabase);
@@ -141,6 +173,12 @@ namespace DataBaseCommunication.DataProviders
                 services += service.ServiceId + ",";
             }
 
+            var servicesDone = "";
+            foreach (var serviceDone in request.Creation.ServicesDone)
+            {
+                servicesDone += serviceDone.ServiceId + ",";
+            }
+
             AddInParameter(commandWrapper, "@JobType", DbType.String, services.Substring(0, services.Length - 1));
             AddInParameter(commandWrapper, "@Mail", DbType.String, request.Creation.Mail);
             AddInParameter(commandWrapper, "@Name", DbType.String, request.Creation.Name);
@@ -152,6 +190,8 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@PIB", DbType.String, request.Creation.PIB);
             AddInParameter(commandWrapper, "@Amount", DbType.Int32, request.Creation.Amount);
             AddInParameter(commandWrapper, "@CompanySubType", DbType.String, request.Creation.CompanySubType);
+            AddInParameter(commandWrapper, "@JobDone", DbType.String, servicesDone.Substring(0, servicesDone.Length - 1));
+
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
             AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);
@@ -242,6 +282,8 @@ namespace DataBaseCommunication.DataProviders
             var commandWrapper = GetStoredProcCommand("dbo.UpdatePaymentStatus", conn);
 
             AddInParameter(commandWrapper, "@CreationId", DbType.Int16, request.Creation.CreationId);
+            AddInParameter(commandWrapper, "@PaymentMethod", DbType.Int16, request.Creation.PaymentMethod);
+
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);
             AddInParameter(commandWrapper, "@ERROR_CODE", DbType.String, 4);

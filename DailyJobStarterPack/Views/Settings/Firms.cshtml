@@ -3,8 +3,8 @@
 @using DailyJobStarterPack.Web.ViewModels.Security
 
 <div class="row" style="margin-top: 50px;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
+    <div class="col-md-2"></div>
+    <div class="col-md-7">
         <a class="btn btn-success btn-xs" id="popup-button" href="@Url.Action("CreateNewFirm", "Settings")">
             <span class="glyphicon glyphicon-plus"></span> Unseite novu firmu
         </a>
@@ -12,8 +12,8 @@
 </div>
 
 <div class="row" style="margin-top: 10px;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 ">
+    <div class="col-md-2"></div>
+    <div class="col-md-7 ">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>Pregled trenutnih firmi</h4>
@@ -23,7 +23,16 @@
                     <thead>
                         <tr>
                             <td>
+                                Pib
+                            </td>
+                            <td>
+                                Maticni broj
+                            </td>
+                            <td>
                                 Naziv firme
+                            </td>
+                            <td>
+                                Broj racuna
                             </td>
                             <td></td>
                         </tr>
@@ -33,7 +42,16 @@
                         {
                             <tr>
                                 <td>
+                                    @service.PIB
+                                </td>
+                                <td>
+                                    @service.LegalId
+                                </td>
+                                <td>
                                     @service.FirmName
+                                </td>
+                                <td>
+                                    @service.AccountNumber
                                 </td>
                                 <td style="text-align: center;">
                                     <button class="btn btn-danger btn-xs confirm-delete" data-id="@service.FirmId">

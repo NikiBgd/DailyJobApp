@@ -1,12 +1,34 @@
 ﻿@using DailyJobStarterPack.DataBaseObjects
 @using DailyJob.Helpers
+@using DataBaseCommunication.Helpers
 @using DailyJobStarterPack.Web.ViewModels.Security;
+@using DataBaseCommunication.Mappers.Response.Offers
+
+@model CurrentOffersResponse
 
 <div class="row" style="margin-top: 50px;">
     <div class="col-md-12">
-        <a class="btn btn-success btn-xs" id="popup-button" href="@Url.Action("CreateNewOffer", "Offer")">
+        <a class="btn btn-success btn-xs" href="@Url.Action("CreateNewOffer", "Offer")">
             <span class="glyphicon glyphicon-plus"></span> Unseite novi upit
         </a>
+        <a class="btn btn-success btn-xs" id="popup-button" href="#">
+            <span class="glyphicon glyphicon-filter"></span> Pretrazi ponude
+        </a>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 50px;">
+    <div class="col-md-3">
+        Trenutno kreirani: @Model.Offers.Count(x => x.Status == 0)
+    </div>
+    <div class="col-md-3">
+        Trenutno razmislja: @Model.Offers.Count(x => x.Status == 3)
+    </div>
+    <div class="col-md-3">
+        Trenutno odustali: @Model.Offers.Count(x => x.Status == 2)
+    </div>
+    <div class="col-md-3">
+        Trenutno prihvaceni: @Model.Offers.Count(x => x.Status == 1)
     </div>
 </div>
 
@@ -19,7 +41,7 @@
                         Aktivni upiti
                     </div>
                     <div class="col-md-1 task-number task-number-active">
-                        <span style="margin-left: -5px">@SessionData.Offers.Count</span>
+                        <span style="margin-left: -5px">@Model.Offers.Count</span>
                     </div>
                 </h4>
                 <div class="row">
@@ -29,41 +51,56 @@
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" style="border: 1px solid black;">
                         <tr>
+                            @if (SessionData.User.Role == Role.Admin)
+                            {
+                                <th></th>
+                            }
                             <th>Ime kontakt osobe</th>
                             <th>Naziv</th>
                             <th>PIB</th>
                             <th>Email</th>
                             <th>Telefon</th>
                             <th>Usluga</th>
-                            <th>Kako je cuo?</th>
-                            <th>Utisak</th>
-                            <th>Povratni info</th>
+                            <th>Status</th>
                             <th>Cena</th>
                             <th>Osnovan kod nas?</th>
                             <th>Tip kompanije</th>
                             <th>Zakup?</th>
-                            <th>Datum - Napomena</th>
+                            <th>Akcije</th>
                         </tr>
                         <tbody>
-                            @foreach (var offer in SessionData.Offers.OrderByDescending(x => x.CreationDate))
+                            @foreach (var offer in Model.Offers.OrderByDescending(x => x.CreationDate))
                             {
                                 var serviceNames = "";
                                 offer.Services.ForEach(x => serviceNames += x.ServiceName + "<br>");
                                 <tr>
+                                    @if (SessionData.User.Role == Role.Admin)
+                                    {
+                                        <td>
+                                            <button class="btn btn-danger btn-xs confirm-delete" data-id="@offer.OfferId">
+                                                <span class="glyphicon glyphicon-trash"></span> Obrisi
+                                            </button>
+                                        </td>
+                                    }
                                     <td>@offer.ContactPerson</td>
                                     <td>@offer.Name</td>
                                     <td>@offer.PIB</td>
                                     <td>@offer.Mail</td>
                                     <td>@offer.PhoneNumber</td>
                                     <td>@Html.Raw(serviceNames)</td>
-                                    <td>@offer.HeardFrom</td>
-                                    <td>@offer.Impression</td>
-                                    <td>@offer.BackInfo</td>
+                                    <td>@OffersHelper.GetOfferStatus(offer.Status)</td>
                                     <td>@offer.Amount @offer.AmountCurrency</td>
                                     <td>@(offer.IsOurCreation ? "DA" : "NE")
                                     <td>@offer.CompanyType @(offer.CompanyType == "Preduzetnik" ? offer.CompanySubType : "")</td>
-                                    <td>@(offer.MakeRent ? "DA" : "NE")
-                                    <td>@offer.CreationDate - @offer.Note</td>
+                                    <td>@(offer.MakeRent ? "DA" : "NE") @OffersHelper.GetMakeRentType(offer.MakeRent, offer.MakeRentType)</td>
+                                    <td>
+                                        <button class="btn btn-info btn-xs btn-block show-send-mail" data-id="@offer.OfferId">
+                                            <span class="glyphicon glyphicon-envelope"> Posalji mail</span>
+                                        </button>
+                                        <a href="@Url.Action("UpdateOffer", "Offer")?OfferId=@offer.OfferId" class="btn btn-danger btn-xs btn-block">
+                                            Izmeni <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -93,26 +130,97 @@
     </div>
 </div>
 
+<div id="modal-from-dom" class="modal hide overlay">
+    <div class="popup">
+        <div class="modal-header">
+            <a href="#" data-dismiss="modal" class="close">&times;</a>
+            <h3>Brisanje ponude</h3>
+        </div>
+        <div class="modal-body">
+            <p>Trajno cete obrisati ponudu iz sistema.</p>
+            <p>Da li ste sigurni da zelite da nastavite?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="" class="btn danger" id="delete-confirm">Da</a>
+            <a href="#" data-dismiss="modal" class="btn secondary">Ne</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup1" class="overlay" style="display:none;">
+    <br />
+    <div class="popup popup-form">
+        @using (Html.BeginForm("Index", "Offer", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "offersForm" }))
+        {
+            <h2>Pretraga ponuda</h2>
+            <a class="close" href="javascript: hidePopUp()">&times;</a>
+            <div class="content">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="DateFrom">Datum od</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-briefcase">
+                                    </i>
+                                </div>
+                                <input id="DateFrom" name="DateFrom" type="text" class="form-control input-md" value="@Model.OffersSearchCriteria.DateFrom" autocomplete="off">
+                                <script>
+                                    $(function () {
+                                        $("#DateFrom").datepicker();
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="DateTo">Datum do</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-briefcase">
+                                    </i>
+                                </div>
+                                <input id="DateTo" name="DateTo" type="text" class="form-control input-md" value="@Model.OffersSearchCriteria.DateTo" autocomplete="off">
+                                <script>
+                                    $(function () {
+                                        $("#DateTo").datepicker();
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript: hidePopUp()" data-dismiss="modal" class="btn secondary">Odustani</a>
+                <a href="javascript: submitForm('offersForm')" data-dismiss="modal" class="btn secondary">U redu</a>
+            </div>
+        }
+    </div>
+</div>
+
 <script>
-    $('#send-mail').on('show', function () {
-        var id = $(this).data('id'),
-            removeBtn = $(this).find('#send-mail-confirm');
+                                    $('#send-mail').on('show', function () {
+                                        var id = $(this).data('id'),
+                                            removeBtn = $(this).find('#send-mail-confirm');
 
-        removeBtn.attr('href', 'javascript: SendMail(' + id + ')');
-    });
+                                        removeBtn.attr('href', 'javascript: SendMail(' + id + ')');
+                                    });
 
-    $('.show-send-mail').on('click', function (e) {
-        e.preventDefault();
+                                    $('.show-send-mail').on('click', function (e) {
+                                        e.preventDefault();
 
-        var id = $(this).data('id');
-        $('#send-mail').data('id', id).modal('show').trigger('show');
-    });
+                                        var id = $(this).data('id');
+                                        $('#send-mail').data('id', id).modal('show').trigger('show');
+                                    });
 
-    function SendMail(id) {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("SendMail", "Creations")",
-           data: { 'creationId': id},
+                                    function SendMail(id) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "@Url.Action("SendMail", "Offer")",
+           data: { 'offerId': id},
            dataType: "json",
            success: function (result) {
                debugger;
@@ -135,4 +243,57 @@
         });
     }
 
+    $('#modal-from-dom').on('show', function () {
+        var id = $(this).data('id'),
+            removeBtn = $(this).find('#delete-confirm');
+
+        removeBtn.attr('href', 'javascript: DeleteCreation(' + id + ')');
+    });
+
+    $('.confirm-delete').on('click', function (e) {
+        e.preventDefault();
+
+        var id = $(this).data('id');
+        $('#modal-from-dom').data('id', id).modal('show').trigger('show');
+    });
+
+
+    function DeleteCreation(id) {
+         $.ajax({
+           type: "POST",
+           url: "@Url.Action("DeleteOffer", "Offer")",
+           data: { 'offerId': id},
+           dataType: "json",
+           success: function (result) {
+               if (result.IsSucessful)
+               {
+                   $('.modal-body').html('<p>Uspesno ste obrisali ponudu iz sistema.</p>')
+                   $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+               }
+               else
+               {
+                   $('.modal-body').html('<p>' + result.ResponseDescription + '</p>')
+                   $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+               }
+           },
+           error: function (response) {
+               $('.modal-body').html('<p>Doslo je do greske prilkom brisanja ponude iz sistema.</p>')
+               $('.modal-footer').html('<a href="javascript: window.location.reload()" class="btn secondary">U redu</a>');
+           }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#popup-button").on("click", function () {
+            $("#popup1").css("display", "block");
+        });
+    });
+
+    function submitForm(formId) {
+        $("#" + formId).submit();
+    }
+
+    function hidePopUp() {
+        $("#popup1").css("display", "none");
+    }
 </script>

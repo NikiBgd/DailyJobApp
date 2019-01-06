@@ -1,9 +1,12 @@
 ﻿using DailyJobStarterPack.Controllers;
 using DailyJobStarterPack.DataBaseObjects;
 using DailyJobStarterPack.Web.ViewModels.Security;
+using DataBaseCommunication.Helpers;
 using DataBaseCommunication.Mappers;
 using DataBaseCommunication.Mappers.Interfaces;
+using DataBaseCommunication.Mappers.Response.Creations;
 using DataBaseCommunication.Services;
+using DataBaseCommunication.Services.Clients;
 using DataBaseCommunication.Services.Interface;
 using System;
 using System.Collections.Generic;
@@ -32,7 +35,7 @@ namespace DailyJob.Controllers
         }
 
 
-        public ActionResult Index()
+        public ActionResult Index(CreationsSearchCriteria criteria)
         {
             var request = _creationsMapper.GetCurrentCreations(SessionData.User.Team.Id, SessionData.User.Role);
             var result = _creationsService.GetCurrentCreations(request);
@@ -46,11 +49,31 @@ namespace DailyJob.Controllers
                     var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
                     creation.Services.Add(s);
                 }
+
+                creation.ServicesDone = new List<Service>();
+                var selectedServicesDone = creation.JobDone;
+                if(!string.IsNullOrEmpty(selectedServicesDone))
+                { 
+                    foreach (var serviceID in selectedServicesDone.Split(','))
+                    {
+                        var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                        creation.ServicesDone.Add(s);
+                    }
+                }
             }
 
             SessionData.Creations = result.Creations;
 
-            return View();
+            var filteredCreations = CreationsHelper.ApplyCreationsSearchCriteria(criteria, SessionData.Creations);
+
+
+            var response = new CurrentCreationsResponse()
+            {
+                Creations = filteredCreations,
+                CreationsSearchCriteria = criteria
+            };
+
+            return View(response);
         }
 
 
@@ -114,9 +137,10 @@ namespace DailyJob.Controllers
 
 
 
-        public ActionResult UpdatePaymentStatus(int creationId)
+        public ActionResult UpdatePaymentStatus(int creationId, int type, int companyId)
         {
             var creation = SessionData.Creations.FirstOrDefault(x => x.CreationId == creationId);
+            creation.PaymentMethod = type;
 
             var request = _creationsMapper.GetUpdatePaymentStatusRequest(creation);
             var result = _creationsService.UpdatePaymentStatus(request);
@@ -140,6 +164,11 @@ namespace DailyJob.Controllers
                 SessionData.Creations = resultOfUpdating.Creations;
             }
 
+            if(type == 3)
+            {
+                result.CreationId = creationId;
+                result.CompanyForBill = companyId;
+            }
             return Json(result);
         }
 
@@ -229,16 +258,60 @@ namespace DailyJob.Controllers
         }
 
         [HttpPost]
+        public ActionResult DeleteCreation(int CreationId)
+        {
+            var request = _creationsMapper.GetDeleteCreationRequest(CreationId);
+            var result = _creationsService.DeleteCreation(request);
+
+            if (result.IsSucessful)
+            {
+                //update user data
+                var requestForUpdatingList = _creationsMapper.GetCurrentCreations(SessionData.User.Team.Id, SessionData.User.Role);
+                var resultOfUpdating = _creationsService.GetCurrentCreations(requestForUpdatingList);
+
+                foreach (var c in resultOfUpdating.Creations)
+                {
+                    c.Services = new List<Service>();
+                    var selectedServicesUpdate = c.JobType;
+                    foreach (var serviceID in selectedServicesUpdate.Split(','))
+                    {
+                        var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                        c.Services.Add(s);
+                    }
+                }
+
+                SessionData.Creations = resultOfUpdating.Creations;
+                ViewData["isSuccessful"] = true;
+            }
+
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public ActionResult UpdateCreation(FormCollection form)
         {
             Creation creation = new Creation();
             UpdateModel(creation);
             creation.Services = new List<Service>();
+            creation.ServicesDone = new List<Service>();
+
             var selectedServices = form["JobType"];
+            var selectedServicesDone = form["JobTypeDone"];
+
             foreach (var serviceID in selectedServices.Split(','))
             {
                 var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
                 creation.Services.Add(s);
+            }
+
+            if(!string.IsNullOrEmpty(selectedServicesDone))
+            {
+                foreach (var serviceID in selectedServicesDone.Split(','))
+                {
+                    var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                    creation.ServicesDone.Add(s);
+                }
             }
 
             var request = _creationsMapper.GetUpdateCreationRequest(creation);
@@ -258,6 +331,17 @@ namespace DailyJob.Controllers
                     {
                         var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
                         c.Services.Add(s);
+                    }
+
+                    c.ServicesDone = new List<Service>();
+                    var selectedServicesUpdateDone = c.JobDone;
+                    if (!string.IsNullOrEmpty(selectedServicesUpdateDone))
+                    {
+                        foreach (var serviceID in selectedServicesUpdateDone.Split(','))
+                        {
+                            var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                            c.ServicesDone.Add(s);
+                        }
                     }
                 }
 

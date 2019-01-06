@@ -137,7 +137,7 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers
             return request;
         }
 
-        public UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId)
+        public UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId, string reason)
         {
             var request = new UpdateClientStatusRequest
             {
@@ -145,6 +145,7 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers
                 Status = status,
                 Role = role,
                 TeamId = teamId,
+                Reason = reason,
                 ActionType = DataBaseCommunication.Mappers.Requests.ActionType.Update
             };
 
@@ -203,5 +204,51 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers
             return request;
         }
 
+        public ChangeClientReportsRequest GetChangeClientReportsReqeuest(int clientId, string reportData)
+        {
+            var request = new ChangeClientReportsRequest
+            {
+                ClientId = clientId,
+                ReportData = reportData,
+                ActionType = DataBaseCommunication.Mappers.Requests.ActionType.Update
+            };
+
+            return request;
+        }
+
+        public RelatedCompaniesRequest GetRelatedCompaniesRequest(int clientId)
+        {
+            var request = new RelatedCompaniesRequest
+            {
+                ClientId = clientId,
+                ActionType = DataBaseCommunication.Mappers.Requests.ActionType.Select
+            };
+
+            return request;
+        }
+
+        public DeleteRelatedCompanyRequest GetDeleteRelatedCompanyRequest(int companyId, int relatedCompanyId)
+        {
+            var request = new DeleteRelatedCompanyRequest
+            {
+                ClientId = companyId,
+                RelatedClientId = relatedCompanyId,
+                ActionType = DataBaseCommunication.Mappers.Requests.ActionType.Delete
+            };
+
+            return request;
+        }
+
+        public AddRelatedCompanyRequest GetAddRelatedCompanyRequest(int companyId, int relatedCompanyId)
+        {
+            var request = new AddRelatedCompanyRequest
+            {
+                ClientId = companyId,
+                RelatedClientId = relatedCompanyId,
+                ActionType = DataBaseCommunication.Mappers.Requests.ActionType.Insert
+            };
+
+            return request;
+        }
     }
 }

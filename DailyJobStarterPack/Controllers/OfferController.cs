@@ -1,9 +1,12 @@
 ﻿using DailyJobStarterPack.DataBaseObjects;
 using DailyJobStarterPack.Web.ViewModels.Security;
+using DataBaseCommunication.Helpers;
 using DataBaseCommunication.Mappers;
 using DataBaseCommunication.Mappers.Interfaces;
+using DataBaseCommunication.Mappers.Response.Offers;
 using DataBaseCommunication.Services;
 using DataBaseCommunication.Services.Interface;
+using DataBaseCommunication.Services.Offer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +31,7 @@ namespace DailyJob.Controllers
             _offerMapper = offerMapper;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(OffersSearchCriteria criteria)
         {
             var request = _offerMapper.GetOffersRequest(SessionData.User.Team.Id, SessionData.User.Role);
             var result = _offerService.GetOffers(request);
@@ -46,7 +49,15 @@ namespace DailyJob.Controllers
 
             SessionData.Offers = result.Offers;
 
-            return View();
+            var filteredOffers = OffersHelper.ApplyOffersSearchCriteria(criteria, SessionData.Offers);
+
+            var response = new CurrentOffersResponse()
+            {
+                Offers = filteredOffers,
+                OffersSearchCriteria = criteria
+            };
+
+            return View(response);
         }
 
 
@@ -83,6 +94,88 @@ namespace DailyJob.Controllers
             }
             
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult UpdateOffer(int offerId)
+        {
+            var offer = SessionData.Offers.FirstOrDefault(x => x.OfferId == offerId);
+            return View(offer);
+        }
+
+
+        [HttpPost]
+        public ActionResult UpdateOffer(FormCollection form)
+        {
+            Offer offer = new Offer();
+            UpdateModel(offer);
+
+            var selectedServices = form["JobType"];
+
+            offer.Services = new List<Service>();
+            foreach (var serviceID in selectedServices.Split(','))
+            {
+                var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                offer.Services.Add(s);
+            }
+
+            var request = _offerMapper.GetUpdateOfferRequest(offer);
+            var result = _offerService.UpdateOffer(request);
+
+            if (result.IsSucessful)
+            {
+                //update user data
+                var requestForUpdating = _offerMapper.GetOffersRequest(SessionData.User.Team.Id, SessionData.User.Role);
+                var resultForUpdating = _offerService.GetOffers(requestForUpdating);
+
+                foreach (var updatedOffer in resultForUpdating.Offers)
+                {
+                    updatedOffer.Services = new List<Service>();
+                    var selectedupdatedOfferServices = updatedOffer.ServiceId;
+                    foreach (var serviceID in selectedupdatedOfferServices.Split(','))
+                    {
+                        var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                        updatedOffer.Services.Add(s);
+                    }
+                }
+
+                SessionData.Offers = resultForUpdating.Offers;
+                ViewData["isSuccessful"] = true;
+            }
+
+            return View(offer);
+        }
+
+
+        [HttpPost]
+        public ActionResult DeleteOffer(int offerId)
+        {
+            var request = _offerMapper.GetDeleteOfferRequest(offerId);
+            var result = _offerService.DeleteOffer(request);
+
+            if (result.IsSucessful)
+            {
+                //update user data
+                var requestForUpdating = _offerMapper.GetOffersRequest(SessionData.User.Team.Id, SessionData.User.Role);
+                var resultForUpdating = _offerService.GetOffers(requestForUpdating);
+
+                foreach (var updatedOffer in resultForUpdating.Offers)
+                {
+                    updatedOffer.Services = new List<Service>();
+                    var selectedupdatedOfferServices = updatedOffer.ServiceId;
+                    foreach (var serviceID in selectedupdatedOfferServices.Split(','))
+                    {
+                        var s = SessionData.Services.FirstOrDefault(x => x.ServiceId == Int32.Parse(serviceID));
+                        updatedOffer.Services.Add(s);
+                    }
+                }
+
+                SessionData.Offers = resultForUpdating.Offers;
+                ViewData["isSuccessful"] = true;
+            }
+
+
+            return Json(result);
         }
     }
 }

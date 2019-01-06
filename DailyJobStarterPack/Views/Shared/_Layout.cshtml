@@ -39,10 +39,10 @@
                 <strong>Moj profil</strong>
                 <ul class="move-inside">
                     <li><a href="@Url.Action("ChangeData", "Account")">Izmeni podatke</a></li>
-                    <li><a href="@Url.Action("Index", "Clients")">Moji klijeti</a></li>
+                    <li><a href="@Url.Action("Index", "Clients")">Moji klijenti</a></li>
                     @if (SessionData.User.Role == Role.Admin || SessionData.User.Role == Role.TeamLead)
                     {
-                        <li><a href="@Url.Action("AllUsers", "Account")">Svi korinsnici</a></li>
+                        <li><a href="@Url.Action("AllUsers", "Account")">Svi korisnici</a></li>
                     }
                 </ul>
             </li>
@@ -57,6 +57,7 @@
                 <ul class="move-inside">
                     <li><a href="@Url.Action("Index", "Offer")">Modul za upite</a></li>
                     <li><a href="@Url.Action("Index", "Creations")">Modul za osnivanje</a></li>
+                    <li><a href="@Url.Action("AllUsers", "Billing")">Modul za fakturisanje</a></li>
                 </ul>
             </li>
             @if (SessionData.User.Role == Role.Admin)

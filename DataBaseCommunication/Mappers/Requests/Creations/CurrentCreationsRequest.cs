@@ -43,4 +43,10 @@ namespace DataBaseCommunication.Mappers.Requests.Creations
         public Creation Creation { get; set; }
     }
 
+
+    public class DeleteCreationRequest: Request
+    {
+        public int CreationId { get; set; }
+    }
+
 }

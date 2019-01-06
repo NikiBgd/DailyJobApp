@@ -19,9 +19,13 @@ namespace DailyJobStarterPack.DataBaseObjects.Mappers.Interfaces
         LogWorkersOrderRequest GetWorkersOrderRequest(int clientId, int courierId, int userId, Role role, int teamId);
         AllTimesForClientRequest GetAllTimesForClientRequest(int clientId, DateTime startDate, DateTime endDate);
         AllWorkerOrdersForClientRequest GetAllWorkerOrdersForClientRequest(int clientId, DateTime startDate, DateTime endDate);
-        UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId);
         GetReportDetailsRequest GetReportDetailsRequest(long clientId,long reportId,int year);
         UpdateReportDataRequest UpdateReportDataRequest(long clientId, long reportId, List<ReportData> reportData);
         InsertReportDataRequest InsertReportDataRequest(long clientId, long reportId, List<ReportData> reportData);
+        UpdateClientStatusRequest GetUpdateClientStatusRequest(int clientId, int status, Role role, int teamId, string reason);
+        ChangeClientReportsRequest GetChangeClientReportsReqeuest(int clientId, string reportData);
+        RelatedCompaniesRequest GetRelatedCompaniesRequest(int clientId);
+        DeleteRelatedCompanyRequest GetDeleteRelatedCompanyRequest(int companyId, int relatedCompanyId);
+        AddRelatedCompanyRequest GetAddRelatedCompanyRequest(int companyId, int relatedCompanyId);
     }
 }

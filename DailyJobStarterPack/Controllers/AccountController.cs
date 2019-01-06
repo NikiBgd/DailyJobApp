@@ -114,8 +114,11 @@ namespace DailyJobStarterPack.Controllers
                             }
                             else
                             {
-                                var localAmount = nbsService.ChangeToRsd(client.AmountCode, "rsd", client.Amount, "sre");
-                                client.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                                if(client.Amount > 0 && !string.IsNullOrEmpty(client.AmountCode))
+                                {
+                                    var localAmount = nbsService.ChangeToRsd(client.AmountCode, "rsd", client.Amount, "sre");
+                                    client.LocalAmount = Decimal.Parse(localAmount.Result.Value);
+                                }
                             }
                         }
 

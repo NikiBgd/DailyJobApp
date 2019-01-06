@@ -208,6 +208,18 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-md-4 control-label" for="JobTypeDone">Uradjeni posao</label>
+                            <div class="col-md-4">
+                                @foreach (var serviceDone in Model.Services)
+                                {
+                                    <div class="checkbox">
+                                        <label for="JobTypeDone-@serviceDone.ServiceId"><input type="checkbox" name="JobTypeDone" id="JobTypeDone-@serviceDone.ServiceId" value="@serviceDone.ServiceId" @(Model.ServicesDone.Any(x => x.ServiceId == serviceDone.ServiceId) ? "checked" : "")>@serviceDone.ServiceName</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <div class="col-md-4" style="text-align: right">
                                 <a href="@Url.Action("Index", "Creations")" class="btn btn-danger"><span class="glyphicon glyphicon-thumbs-down"></span> Odustani</a>
                             </div>

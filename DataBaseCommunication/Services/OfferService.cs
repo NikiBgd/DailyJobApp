@@ -39,6 +39,31 @@ namespace DataBaseCommunication.Services
             return response;
         }
 
+        public DeleteOfferResponse DeleteOffer(DeleteOfferRequest request)
+        {
+            var response = new DeleteOfferResponse { ResponseStatus = ResponseStatus.Success };
+
+            var offersProvider = new OffersProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Delete)
+                {
+                    response.IsSucessful = offersProvider.DeleteOffer(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
+
         public OffersResponse GetOffers(OffersRequest request)
         {
             var response = new OffersResponse { ResponseStatus = ResponseStatus.Success };
@@ -63,5 +88,32 @@ namespace DataBaseCommunication.Services
             }
             return response;
         }
+
+
+        public UpdateOfferResponse UpdateOffer(UpdateOfferRequest request)
+        {
+            var response = new UpdateOfferResponse { ResponseStatus = ResponseStatus.Success };
+
+            var offersProvider = new OffersProvider();
+            try
+            {
+                if (request.ActionType == ActionType.Update)
+                {
+                    response.IsSucessful = offersProvider.UpdateOffer(request);
+                }
+                else
+                {
+                    response.ResponseStatus = ResponseStatus.Failure;
+                    response.ResponseDescription = "Not update action";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ResponseStatus = ResponseStatus.Failure;
+                response.ResponseDescription = ex.Message;
+            }
+            return response;
+        }
+
     }
 }
