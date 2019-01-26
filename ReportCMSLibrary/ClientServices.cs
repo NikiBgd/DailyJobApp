@@ -12,11 +12,9 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class AdminSetting
+    public partial class ClientServices
     {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public int Type { get; set; }
-        public bool IncludeInCalculation { get; set; }
+        public int ClientId { get; set; }
+        public int ServiceId { get; set; }
     }
 }

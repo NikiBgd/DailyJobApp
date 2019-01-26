@@ -12,12 +12,13 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Service
+    public partial class Warnings
     {
-        public int ServiceId { get; set; }
-        public string ServiceName { get; set; }
-        public string ServiceDescription { get; set; }
-        public int Price { get; set; }
-        public int Type { get; set; }
+        public int ID { get; set; }
+        public Nullable<int> ClientID { get; set; }
+        public Nullable<System.DateTime> WarningDate { get; set; }
+        public Nullable<int> WarningType { get; set; }
+    
+        public virtual Customers Customers { get; set; }
     }
 }

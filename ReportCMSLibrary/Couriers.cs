@@ -12,13 +12,12 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Warning
+    public partial class Couriers
     {
-        public int ID { get; set; }
-        public Nullable<int> ClientID { get; set; }
-        public Nullable<System.DateTime> WarningDate { get; set; }
-        public Nullable<int> WarningType { get; set; }
-    
-        public virtual Customer Customer { get; set; }
+        public int CourierId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string LegalId { get; set; }
+        public string Address { get; set; }
     }
 }

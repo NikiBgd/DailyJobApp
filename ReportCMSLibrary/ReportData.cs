@@ -27,6 +27,6 @@ namespace ReportCMSLibrary
         public string TextValue { get; set; }
         public Nullable<bool> BoolValue { get; set; }
     
-        public virtual ReportDataType ReportDataType { get; set; }
+        public virtual ReportDataTypes ReportDataTypes { get; set; }
     }
 }

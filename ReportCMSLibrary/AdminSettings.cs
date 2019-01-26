@@ -12,12 +12,11 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class CustomerTime
+    public partial class AdminSettings
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int UserId { get; set; }
-        public decimal Time { get; set; }
-        public System.DateTime InsertionDate { get; set; }
+        public decimal Amount { get; set; }
+        public int Type { get; set; }
+        public bool IncludeInCalculation { get; set; }
     }
 }

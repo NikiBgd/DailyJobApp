@@ -12,12 +12,10 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Courier
+    public partial class DeletionReasons
     {
-        public int CourierId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string LegalId { get; set; }
-        public string Address { get; set; }
+        public int CustomerId { get; set; }
+        public string Reason { get; set; }
+        public System.DateTime Date { get; set; }
     }
 }

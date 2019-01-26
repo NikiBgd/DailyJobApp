@@ -1,4 +1,10 @@
-﻿<div class="js-columns-list">
+﻿<h3>Unesite naziv izvestaja:</h3>
+<input class="js-report-name" type="text" name="reportName" value="">
+<br />
+<br />
+<br />
+<br />
+<div class="js-columns-list">
 
 </div>
 
@@ -71,39 +77,47 @@
     $(document).on("click", ".js-save-report-shema", function () {
         var reportDataArray = [];
         var columnElements = $(".js-column-element");
+        var reportName = $(".js-report-name").val();
 
-        $.each(columnElements, function (index, value) {
-            var name = $(this).find(".js-column-name").val();
-            var typeId = $(this).find(".js-column-type").val();
-            var isDateRelated = $(this).find(".js-column-date-related").val();
-            var periodLength = $(this).find(".js-period-length").val();
-            var order = $(this).find(".js-order-value").val();
+        if (reportName) {
 
-            var dataColumn = {
-                ColumnName: name,
-                TypeID: typeId,
-                IsDateRelated: isDateRelated,
-                MonthlyPeriod: periodLength,
-                Ordering: order
-            };
+            $.each(columnElements, function (index, value) {
+                var name = $(this).find(".js-column-name").val();
+                var typeId = $(this).find(".js-column-type").val();
+                var isDateRelated = $(this).find(".js-column-date-related").val();
+                var periodLength = $(this).find(".js-period-length").val();
+                var order = $(this).find(".js-order-value").val();
 
-            reportDataArray.push(dataColumn);
-        });
+                var dataColumn = {
+                    ColumnName: name,
+                    TypeID: typeId,
+                    IsDateRelated: isDateRelated,
+                    MonthlyPeriod: periodLength,
+                    Ordering: order
+                };
+
+                reportDataArray.push(dataColumn);
+            });
 
 
-        $.ajax({
-            url: '@Url.Action("InsertNewReport", "Clients")',
-            type: 'POST',
-            data: {
-                report: reportDataArray
-            },
+            $.ajax({
+                url: '@Url.Action("InsertNewReport", "Clients")',
+                type: 'POST',
+                data: {
+                    reportName: reportName,
+                    report: reportDataArray
+                },
 
-            success: function (data) {
-                location.reload();
-            },
-            error: function () {
-                alert("Doslo je do greske! Pokusajte ponovo");
-            }
-        });
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Doslo je do greske! Pokusajte ponovo");
+                }
+            });
+        }
+        else {
+            alert("Molimo vas unesite ime izvestaja");
+        }
     });
 </script>

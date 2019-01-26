@@ -12,11 +12,15 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Time
+    public partial class Firms
     {
-        public int TimeId { get; set; }
-        public string TimeDescription { get; set; }
-        public string TimeName { get; set; }
-        public int Value { get; set; }
+        public int FirmId { get; set; }
+        public string FirmName { get; set; }
+        public string PIB { get; set; }
+        public string Address { get; set; }
+        public string AccountNumber { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Mail { get; set; }
+        public string LegalId { get; set; }
     }
 }

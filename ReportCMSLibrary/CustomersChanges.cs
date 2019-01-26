@@ -12,9 +12,14 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Firm
+    public partial class CustomersChanges
     {
-        public int FirmId { get; set; }
-        public string FirmName { get; set; }
+        public int ChangeNumber { get; set; }
+        public int CustomerId { get; set; }
+        public int UserId { get; set; }
+        public string FieldName { get; set; }
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+        public System.DateTime ChangeDate { get; set; }
     }
 }

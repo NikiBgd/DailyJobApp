@@ -12,11 +12,12 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class ClientCost
+    public partial class CustomerTimes
     {
-        public int ClientId { get; set; }
-        public int CostType { get; set; }
-        public System.DateTime CostDate { get; set; }
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
         public int UserId { get; set; }
+        public decimal Time { get; set; }
+        public System.DateTime InsertionDate { get; set; }
     }
 }

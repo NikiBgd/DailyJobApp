@@ -12,9 +12,11 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class AdminSettingsTypesDescription
+    public partial class ClientCosts
     {
-        public int Type { get; set; }
-        public string Decription { get; set; }
+        public int ClientId { get; set; }
+        public int CostType { get; set; }
+        public System.DateTime CostDate { get; set; }
+        public int UserId { get; set; }
     }
 }

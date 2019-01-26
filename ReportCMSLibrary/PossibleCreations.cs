@@ -12,7 +12,7 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class PossibleCreation
+    public partial class PossibleCreations
     {
         public int CreationId { get; set; }
         public string JobType { get; set; }
@@ -34,5 +34,6 @@ namespace ReportCMSLibrary
         public string PIB { get; set; }
         public Nullable<int> Amount { get; set; }
         public string CompanySubType { get; set; }
+        public string JobDone { get; set; }
     }
 }

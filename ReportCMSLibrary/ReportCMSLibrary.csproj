@@ -61,35 +61,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminSetting.cs">
+    <Compile Include="AdminSettings.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="AdminSettingsTypesDescription.cs">
+    <Compile Include="AdminSettingsTypesDescriptions.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Billing.cs">
+    <Compile Include="Billings.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
-    <Compile Include="ClientCost.cs">
+    <Compile Include="ClientCosts.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="ClientService.cs">
+    <Compile Include="ClientServices.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Courier.cs">
+    <Compile Include="Couriers.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Customer.cs">
+    <Compile Include="Customers.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="CustomersChanx.cs">
+    <Compile Include="CustomersChanges.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="CustomersReport.cs">
+    <Compile Include="CustomersReports.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="CustomerTime.cs">
+    <Compile Include="CustomerTimes.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
     <Compile Include="DbReportData.Context.cs">
@@ -107,44 +107,50 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DbReportData.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Firm.cs">
+    <Compile Include="DeletionReasons.cs">
+      <DependentUpon>DbReportData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Firms.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ColumnReport.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
-    <Compile Include="Offer.cs">
+    <Compile Include="Offers.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="PossibleCreation.cs">
+    <Compile Include="PossibleCreations.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelatedCustomers.cs">
+      <DependentUpon>DbReportData.tt</DependentUpon>
+    </Compile>
     <Compile Include="ReportCMSUtility.cs" />
     <Compile Include="ReportData.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReportDataType.cs">
+    <Compile Include="ReportDataTypes.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReportType.cs">
+    <Compile Include="ReportTypes.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Service.cs">
+    <Compile Include="Services.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Team.cs">
+    <Compile Include="Teams.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Time.cs">
+    <Compile Include="Times.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
     <Compile Include="Trace.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="User.cs">
+    <Compile Include="Users.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Warning.cs">
+    <Compile Include="Warnings.cs">
       <DependentUpon>DbReportData.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -160,6 +166,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="DbReportData.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DbReportData.edmx</DependentUpon>
@@ -170,9 +179,6 @@
       <DependentUpon>DbReportData.edmx</DependentUpon>
       <LastGenOutput>DbReportData.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

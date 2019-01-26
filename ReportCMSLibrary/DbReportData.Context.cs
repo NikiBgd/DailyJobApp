@@ -25,27 +25,29 @@ namespace ReportCMSLibrary
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Billing> Billings { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<ReportData> ReportDatas { get; set; }
-        public virtual DbSet<ReportDataType> ReportDataTypes { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Warning> Warnings { get; set; }
-        public virtual DbSet<AdminSetting> AdminSettings { get; set; }
-        public virtual DbSet<AdminSettingsTypesDescription> AdminSettingsTypesDescriptions { get; set; }
-        public virtual DbSet<ClientCost> ClientCosts { get; set; }
-        public virtual DbSet<ClientService> ClientServices { get; set; }
-        public virtual DbSet<Courier> Couriers { get; set; }
-        public virtual DbSet<CustomersChanx> CustomersChanges { get; set; }
-        public virtual DbSet<CustomersReport> CustomersReports { get; set; }
-        public virtual DbSet<CustomerTime> CustomerTimes { get; set; }
-        public virtual DbSet<Firm> Firms { get; set; }
-        public virtual DbSet<Offer> Offers { get; set; }
-        public virtual DbSet<PossibleCreation> PossibleCreations { get; set; }
-        public virtual DbSet<ReportType> ReportTypes { get; set; }
-        public virtual DbSet<Service> Services { get; set; }
-        public virtual DbSet<Team> Teams { get; set; }
-        public virtual DbSet<Time> Times { get; set; }
-        public virtual DbSet<Trace> Traces { get; set; }
+        public virtual DbSet<Billings> Billings { get; set; }
+        public virtual DbSet<Customers> Customers { get; set; }
+        public virtual DbSet<ReportData> ReportData { get; set; }
+        public virtual DbSet<ReportDataTypes> ReportDataTypes { get; set; }
+        public virtual DbSet<ReportTypes> ReportTypes { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Warnings> Warnings { get; set; }
+        public virtual DbSet<AdminSettings> AdminSettings { get; set; }
+        public virtual DbSet<AdminSettingsTypesDescriptions> AdminSettingsTypesDescriptions { get; set; }
+        public virtual DbSet<ClientCosts> ClientCosts { get; set; }
+        public virtual DbSet<ClientServices> ClientServices { get; set; }
+        public virtual DbSet<Couriers> Couriers { get; set; }
+        public virtual DbSet<CustomersChanges> CustomersChanges { get; set; }
+        public virtual DbSet<CustomersReports> CustomersReports { get; set; }
+        public virtual DbSet<CustomerTimes> CustomerTimes { get; set; }
+        public virtual DbSet<DeletionReasons> DeletionReasons { get; set; }
+        public virtual DbSet<Firms> Firms { get; set; }
+        public virtual DbSet<Offers> Offers { get; set; }
+        public virtual DbSet<PossibleCreations> PossibleCreations { get; set; }
+        public virtual DbSet<RelatedCustomers> RelatedCustomers { get; set; }
+        public virtual DbSet<Services> Services { get; set; }
+        public virtual DbSet<Teams> Teams { get; set; }
+        public virtual DbSet<Times> Times { get; set; }
+        public virtual DbSet<Trace> Trace { get; set; }
     }
 }

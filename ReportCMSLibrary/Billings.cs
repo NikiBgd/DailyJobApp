@@ -12,9 +12,16 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class CustomersReport
+    public partial class Billings
     {
-        public int CustomerId { get; set; }
-        public int ReportId { get; set; }
+        public int ID { get; set; }
+        public Nullable<int> ClientID { get; set; }
+        public Nullable<bool> PAID { get; set; }
+        public Nullable<bool> FirstWarning { get; set; }
+        public Nullable<bool> SecondWarning { get; set; }
+        public Nullable<int> Year { get; set; }
+        public Nullable<int> Month { get; set; }
+    
+        public virtual Customers Customers { get; set; }
     }
 }

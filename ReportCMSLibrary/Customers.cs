@@ -12,13 +12,13 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class Customers
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Customer()
+        public Customers()
         {
-            this.Billings = new HashSet<Billing>();
-            this.Warnings = new HashSet<Warning>();
+            this.Billings = new HashSet<Billings>();
+            this.Warnings = new HashSet<Warnings>();
         }
     
         public string Name { get; set; }
@@ -53,10 +53,13 @@ namespace ReportCMSLibrary
         public string AdditionalMails { get; set; }
         public Nullable<int> CourierDay { get; set; }
         public Nullable<int> Status { get; set; }
+        public Nullable<int> BillFirm { get; set; }
+        public Nullable<System.DateTime> DateFrom { get; set; }
+        public Nullable<System.DateTime> DateTo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Billing> Billings { get; set; }
+        public virtual ICollection<Billings> Billings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Warning> Warnings { get; set; }
+        public virtual ICollection<Warnings> Warnings { get; set; }
     }
 }

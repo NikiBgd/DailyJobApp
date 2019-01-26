@@ -12,7 +12,7 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class Offer
+    public partial class Offers
     {
         public int OfferId { get; set; }
         public string ContactPerson { get; set; }
@@ -34,5 +34,7 @@ namespace ReportCMSLibrary
         public Nullable<bool> MakeRent { get; set; }
         public string CompanyType { get; set; }
         public string CompanySubType { get; set; }
+        public string MakeRentType { get; set; }
+        public Nullable<int> Status { get; set; }
     }
 }

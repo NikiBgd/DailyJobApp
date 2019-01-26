@@ -117,6 +117,9 @@ warning 6002: The table/view 'DailyJob.dbo.Couriers' does not have a primary key
           <Property Name="AdditionalMails" Type="nvarchar" MaxLength="250" />
           <Property Name="CourierDay" Type="int" />
           <Property Name="Status" Type="int" />
+          <Property Name="BillFirm" Type="int" />
+          <Property Name="DateFrom" Type="datetime" />
+          <Property Name="DateTo" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DailyJob.dbo.CustomersChanges' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -165,14 +168,31 @@ warning 6002: The table/view 'DailyJob.dbo.CustomerTimes' does not have a primar
           <Property Name="InsertionDate" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.DeletionReasons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="DeletionReasons">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="Reason" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Reason" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'DailyJob.dbo.Firms' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Firms">
           <Key>
             <PropertyRef Name="FirmId" />
-            <PropertyRef Name="FirmName" />
           </Key>
           <Property Name="FirmId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FirmName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirmName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PIB" Type="nvarchar" MaxLength="10" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="25" />
+          <Property Name="LegalId" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DailyJob.dbo.Offers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -216,6 +236,8 @@ warning 6002: The table/view 'DailyJob.dbo.Offers' does not have a primary key d
           <Property Name="MakeRent" Type="bit" />
           <Property Name="CompanyType" Type="nvarchar" MaxLength="50" />
           <Property Name="CompanySubType" Type="nvarchar" MaxLength="50" />
+          <Property Name="MakeRentType" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DailyJob.dbo.PossibleCreations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -254,6 +276,17 @@ warning 6002: The table/view 'DailyJob.dbo.PossibleCreations' does not have a pr
           <Property Name="PIB" Type="nvarchar" MaxLength="50" />
           <Property Name="Amount" Type="int" />
           <Property Name="CompanySubType" Type="nvarchar" MaxLength="50" />
+          <Property Name="JobDone" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DailyJob.dbo.RelatedCustomers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RelatedCustomers">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="RelatedCustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="RelatedCustomerId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ReportData">
           <Key>
@@ -287,14 +320,11 @@ warning 6002: The table/view 'DailyJob.dbo.PossibleCreations' does not have a pr
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
           <Property Name="Description" Type="nvarchar" MaxLength="255" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DailyJob.dbo.ReportTypes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ReportTypes">
           <Key>
             <PropertyRef Name="ReportId" />
-            <PropertyRef Name="ReportName" />
           </Key>
-          <Property Name="ReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportId" Type="int" Nullable="false" />
           <Property Name="ReportName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -423,6 +453,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReportData" EntityType="Self.ReportData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReportDataTypes" EntityType="Self.ReportDataTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportTypes" EntityType="Self.ReportTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Warnings" EntityType="Self.Warnings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminSettings" EntityType="Self.AdminSettings" store:Type="Tables" store:Schema="dbo">
@@ -488,10 +519,23 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
     [CustomerTimes].[InsertionDate] AS [InsertionDate]
     FROM [dbo].[CustomerTimes] AS [CustomerTimes]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="DeletionReasons" EntityType="Self.DeletionReasons" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DeletionReasons].[CustomerId] AS [CustomerId], 
+    [DeletionReasons].[Reason] AS [Reason], 
+    [DeletionReasons].[Date] AS [Date]
+    FROM [dbo].[DeletionReasons] AS [DeletionReasons]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="Firms" EntityType="Self.Firms" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Firms].[FirmId] AS [FirmId], 
-    [Firms].[FirmName] AS [FirmName]
+    [Firms].[FirmName] AS [FirmName], 
+    [Firms].[PIB] AS [PIB], 
+    [Firms].[Address] AS [Address], 
+    [Firms].[AccountNumber] AS [AccountNumber], 
+    [Firms].[PhoneNumber] AS [PhoneNumber], 
+    [Firms].[Mail] AS [Mail], 
+    [Firms].[LegalId] AS [LegalId]
     FROM [dbo].[Firms] AS [Firms]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Offers" EntityType="Self.Offers" store:Type="Tables" store:Schema="dbo">
@@ -515,7 +559,9 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
     [Offers].[Name] AS [Name], 
     [Offers].[MakeRent] AS [MakeRent], 
     [Offers].[CompanyType] AS [CompanyType], 
-    [Offers].[CompanySubType] AS [CompanySubType]
+    [Offers].[CompanySubType] AS [CompanySubType], 
+    [Offers].[MakeRentType] AS [MakeRentType], 
+    [Offers].[Status] AS [Status]
     FROM [dbo].[Offers] AS [Offers]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PossibleCreations" EntityType="Self.PossibleCreations" store:Type="Tables" store:Schema="dbo">
@@ -539,14 +585,15 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
     [PossibleCreations].[PaymentMethod] AS [PaymentMethod], 
     [PossibleCreations].[PIB] AS [PIB], 
     [PossibleCreations].[Amount] AS [Amount], 
-    [PossibleCreations].[CompanySubType] AS [CompanySubType]
+    [PossibleCreations].[CompanySubType] AS [CompanySubType], 
+    [PossibleCreations].[JobDone] AS [JobDone]
     FROM [dbo].[PossibleCreations] AS [PossibleCreations]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="ReportTypes" EntityType="Self.ReportTypes" store:Type="Tables" store:Schema="dbo">
+          <EntitySet Name="RelatedCustomers" EntityType="Self.RelatedCustomers" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [ReportTypes].[ReportId] AS [ReportId], 
-    [ReportTypes].[ReportName] AS [ReportName]
-    FROM [dbo].[ReportTypes] AS [ReportTypes]</DefiningQuery>
+    [RelatedCustomers].[CustomerId] AS [CustomerId], 
+    [RelatedCustomers].[RelatedCustomerId] AS [RelatedCustomerId]
+    FROM [dbo].[RelatedCustomers] AS [RelatedCustomers]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Services" EntityType="Self.Services" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -599,7 +646,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DailyJobModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Billing">
+        <EntityType Name="Billings">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -610,9 +657,9 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="SecondWarning" Type="Boolean" />
           <Property Name="Year" Type="Int32" />
           <Property Name="Month" Type="Int32" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_Billings_Customers" FromRole="Billings" ToRole="Customers" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Billings_Customers" FromRole="Billings" ToRole="Customers" />
         </EntityType>
-        <EntityType Name="Customer">
+        <EntityType Name="Customers">
           <Key>
             <PropertyRef Name="CustomerID" />
           </Key>
@@ -648,6 +695,9 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="AdditionalMails" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="CourierDay" Type="Int32" />
           <Property Name="Status" Type="Int32" />
+          <Property Name="BillFirm" Type="Int32" />
+          <Property Name="DateFrom" Type="DateTime" Precision="3" />
+          <Property Name="DateTo" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Billings" Relationship="Self.FK_Billings_Customers" FromRole="Customers" ToRole="Billings" />
           <NavigationProperty Name="Warnings" Relationship="Self.FK" FromRole="Customers" ToRole="Warnings" />
         </EntityType>
@@ -674,18 +724,25 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="DateValue" Type="DateTime" Precision="3" />
           <Property Name="TextValue" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="BoolValue" Type="Boolean" />
-          <NavigationProperty Name="ReportDataType" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportData" ToRole="ReportDataTypes" />
+          <NavigationProperty Name="ReportDataTypes" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportData" ToRole="ReportDataTypes" />
         </EntityType>
-        <EntityType Name="ReportDataType">
+        <EntityType Name="ReportDataTypes">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ReportDatas" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportDataTypes" ToRole="ReportData" />
+          <NavigationProperty Name="ReportData" Relationship="Self.FK_ReportData_ReportDataTypes" FromRole="ReportDataTypes" ToRole="ReportData" />
         </EntityType>
-        <EntityType Name="User">
+        <EntityType Name="ReportTypes">
+          <Key>
+            <PropertyRef Name="ReportId" />
+          </Key>
+          <Property Name="ReportId" Type="Int32" Nullable="false" />
+          <Property Name="ReportName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -706,7 +763,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Slava" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Role" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Warning">
+        <EntityType Name="Warnings">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -714,9 +771,9 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="ClientID" Type="Int32" />
           <Property Name="WarningDate" Type="DateTime" Precision="3" />
           <Property Name="WarningType" Type="Int32" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK" FromRole="Warnings" ToRole="Customers" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK" FromRole="Warnings" ToRole="Customers" />
         </EntityType>
-        <EntityType Name="AdminSetting">
+        <EntityType Name="AdminSettings">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="Amount" />
@@ -728,7 +785,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="IncludeInCalculation" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="AdminSettingsTypesDescription">
+        <EntityType Name="AdminSettingsTypesDescriptions">
           <Key>
             <PropertyRef Name="Type" />
             <PropertyRef Name="Decription" />
@@ -736,7 +793,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="Decription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="ClientCost">
+        <EntityType Name="ClientCosts">
           <Key>
             <PropertyRef Name="ClientId" />
             <PropertyRef Name="CostType" />
@@ -748,7 +805,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="CostDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="ClientService">
+        <EntityType Name="ClientServices">
           <Key>
             <PropertyRef Name="ClientId" />
             <PropertyRef Name="ServiceId" />
@@ -756,7 +813,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="ClientId" Type="Int32" Nullable="false" />
           <Property Name="ServiceId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Courier">
+        <EntityType Name="Couriers">
           <Key>
             <PropertyRef Name="CourierId" />
             <PropertyRef Name="FirstName" />
@@ -770,7 +827,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="LegalId" Type="String" MaxLength="13" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="CustomersChanx">
+        <EntityType Name="CustomersChanges">
           <Key>
             <PropertyRef Name="ChangeNumber" />
             <PropertyRef Name="CustomerId" />
@@ -788,7 +845,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="NewValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="CustomersReport">
+        <EntityType Name="CustomersReports">
           <Key>
             <PropertyRef Name="CustomerId" />
             <PropertyRef Name="ReportId" />
@@ -796,7 +853,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="CustomerId" Type="Int32" Nullable="false" />
           <Property Name="ReportId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="CustomerTime">
+        <EntityType Name="CustomerTimes">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="CustomerId" />
@@ -810,15 +867,30 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Time" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="InsertionDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="Firm">
+        <EntityType Name="DeletionReasons">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="Reason" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="Reason" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Firms">
           <Key>
             <PropertyRef Name="FirmId" />
-            <PropertyRef Name="FirmName" />
           </Key>
           <Property Name="FirmId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirmName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirmName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PIB" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AccountNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="LegalId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Offer">
+        <EntityType Name="Offers">
           <Key>
             <PropertyRef Name="OfferId" />
             <PropertyRef Name="ContactPerson" />
@@ -858,8 +930,10 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="MakeRent" Type="Boolean" />
           <Property Name="CompanyType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CompanySubType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MakeRentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
         </EntityType>
-        <EntityType Name="PossibleCreation">
+        <EntityType Name="PossibleCreations">
           <Key>
             <PropertyRef Name="CreationId" />
             <PropertyRef Name="JobType" />
@@ -894,16 +968,17 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="PIB" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Amount" Type="Int32" />
           <Property Name="CompanySubType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="JobDone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="ReportType">
+        <EntityType Name="RelatedCustomers">
           <Key>
-            <PropertyRef Name="ReportId" />
-            <PropertyRef Name="ReportName" />
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="RelatedCustomerId" />
           </Key>
-          <Property Name="ReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ReportName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="RelatedCustomerId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Service">
+        <EntityType Name="Services">
           <Key>
             <PropertyRef Name="ServiceId" />
             <PropertyRef Name="ServiceName" />
@@ -917,7 +992,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Price" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Team">
+        <EntityType Name="Teams">
           <Key>
             <PropertyRef Name="TeamID" />
             <PropertyRef Name="TeamName" />
@@ -927,7 +1002,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="TeamName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TeamLeaderId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Time">
+        <EntityType Name="Times">
           <Key>
             <PropertyRef Name="TimeId" />
             <PropertyRef Name="TimeDescription" />
@@ -951,8 +1026,8 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           <Property Name="Response" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Billings_Customers">
-          <End Role="Customers" Type="Self.Customer" Multiplicity="0..1" />
-          <End Role="Billings" Type="Self.Billing" Multiplicity="*" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Billings" Type="Self.Billings" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customers">
               <PropertyRef Name="CustomerID" />
@@ -963,8 +1038,8 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           </ReferentialConstraint>
         </Association>
         <Association Name="FK">
-          <End Role="Customers" Type="Self.Customer" Multiplicity="0..1" />
-          <End Role="Warnings" Type="Self.Warning" Multiplicity="*" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Warnings" Type="Self.Warnings" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customers">
               <PropertyRef Name="CustomerID" />
@@ -975,7 +1050,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ReportData_ReportDataTypes">
-          <End Role="ReportDataTypes" Type="Self.ReportDataType" Multiplicity="1" />
+          <End Role="ReportDataTypes" Type="Self.ReportDataTypes" Multiplicity="1" />
           <End Role="ReportData" Type="Self.ReportData" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ReportDataTypes">
@@ -987,28 +1062,30 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="DailyJobEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Billings" EntityType="Self.Billing" />
-          <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="ReportDatas" EntityType="Self.ReportData" />
-          <EntitySet Name="ReportDataTypes" EntityType="Self.ReportDataType" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <EntitySet Name="Warnings" EntityType="Self.Warning" />
-          <EntitySet Name="AdminSettings" EntityType="Self.AdminSetting" />
-          <EntitySet Name="AdminSettingsTypesDescriptions" EntityType="Self.AdminSettingsTypesDescription" />
-          <EntitySet Name="ClientCosts" EntityType="Self.ClientCost" />
-          <EntitySet Name="ClientServices" EntityType="Self.ClientService" />
-          <EntitySet Name="Couriers" EntityType="Self.Courier" />
-          <EntitySet Name="CustomersChanges" EntityType="Self.CustomersChanx" />
-          <EntitySet Name="CustomersReports" EntityType="Self.CustomersReport" />
-          <EntitySet Name="CustomerTimes" EntityType="Self.CustomerTime" />
-          <EntitySet Name="Firms" EntityType="Self.Firm" />
-          <EntitySet Name="Offers" EntityType="Self.Offer" />
-          <EntitySet Name="PossibleCreations" EntityType="Self.PossibleCreation" />
-          <EntitySet Name="ReportTypes" EntityType="Self.ReportType" />
-          <EntitySet Name="Services" EntityType="Self.Service" />
-          <EntitySet Name="Teams" EntityType="Self.Team" />
-          <EntitySet Name="Times" EntityType="Self.Time" />
-          <EntitySet Name="Traces" EntityType="Self.Trace" />
+          <EntitySet Name="Billings" EntityType="Self.Billings" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" />
+          <EntitySet Name="ReportData" EntityType="Self.ReportData" />
+          <EntitySet Name="ReportDataTypes" EntityType="Self.ReportDataTypes" />
+          <EntitySet Name="ReportTypes" EntityType="Self.ReportTypes" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Warnings" EntityType="Self.Warnings" />
+          <EntitySet Name="AdminSettings" EntityType="Self.AdminSettings" />
+          <EntitySet Name="AdminSettingsTypesDescriptions" EntityType="Self.AdminSettingsTypesDescriptions" />
+          <EntitySet Name="ClientCosts" EntityType="Self.ClientCosts" />
+          <EntitySet Name="ClientServices" EntityType="Self.ClientServices" />
+          <EntitySet Name="Couriers" EntityType="Self.Couriers" />
+          <EntitySet Name="CustomersChanges" EntityType="Self.CustomersChanges" />
+          <EntitySet Name="CustomersReports" EntityType="Self.CustomersReports" />
+          <EntitySet Name="CustomerTimes" EntityType="Self.CustomerTimes" />
+          <EntitySet Name="DeletionReasons" EntityType="Self.DeletionReasons" />
+          <EntitySet Name="Firms" EntityType="Self.Firms" />
+          <EntitySet Name="Offers" EntityType="Self.Offers" />
+          <EntitySet Name="PossibleCreations" EntityType="Self.PossibleCreations" />
+          <EntitySet Name="RelatedCustomers" EntityType="Self.RelatedCustomers" />
+          <EntitySet Name="Services" EntityType="Self.Services" />
+          <EntitySet Name="Teams" EntityType="Self.Teams" />
+          <EntitySet Name="Times" EntityType="Self.Times" />
+          <EntitySet Name="Trace" EntityType="Self.Trace" />
           <AssociationSet Name="FK_Billings_Customers" Association="Self.FK_Billings_Customers">
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Billings" EntitySet="Billings" />
@@ -1019,7 +1096,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
           </AssociationSet>
           <AssociationSet Name="FK_ReportData_ReportDataTypes" Association="Self.FK_ReportData_ReportDataTypes">
             <End Role="ReportDataTypes" EntitySet="ReportDataTypes" />
-            <End Role="ReportData" EntitySet="ReportDatas" />
+            <End Role="ReportData" EntitySet="ReportData" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -1029,7 +1106,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DailyJobModelStoreContainer" CdmEntityContainer="DailyJobEntities">
           <EntitySetMapping Name="Billings">
-            <EntityTypeMapping TypeName="DailyJobModel.Billing">
+            <EntityTypeMapping TypeName="DailyJobModel.Billings">
               <MappingFragment StoreEntitySet="Billings">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
@@ -1042,7 +1119,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="DailyJobModel.Customer">
+            <EntityTypeMapping TypeName="DailyJobModel.Customers">
               <MappingFragment StoreEntitySet="Customers">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
@@ -1076,10 +1153,13 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
                 <ScalarProperty Name="AdditionalMails" ColumnName="AdditionalMails" />
                 <ScalarProperty Name="CourierDay" ColumnName="CourierDay" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="BillFirm" ColumnName="BillFirm" />
+                <ScalarProperty Name="DateFrom" ColumnName="DateFrom" />
+                <ScalarProperty Name="DateTo" ColumnName="DateTo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ReportDatas">
+          <EntitySetMapping Name="ReportData">
             <EntityTypeMapping TypeName="DailyJobModel.ReportData">
               <MappingFragment StoreEntitySet="ReportData">
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
@@ -1098,7 +1178,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ReportDataTypes">
-            <EntityTypeMapping TypeName="DailyJobModel.ReportDataType">
+            <EntityTypeMapping TypeName="DailyJobModel.ReportDataTypes">
               <MappingFragment StoreEntitySet="ReportDataTypes">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
@@ -1106,8 +1186,16 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ReportTypes">
+            <EntityTypeMapping TypeName="DailyJobModel.ReportTypes">
+              <MappingFragment StoreEntitySet="ReportTypes">
+                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+                <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="DailyJobModel.User">
+            <EntityTypeMapping TypeName="DailyJobModel.Users">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
@@ -1129,7 +1217,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Warnings">
-            <EntityTypeMapping TypeName="DailyJobModel.Warning">
+            <EntityTypeMapping TypeName="DailyJobModel.Warnings">
               <MappingFragment StoreEntitySet="Warnings">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
@@ -1139,7 +1227,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AdminSettings">
-            <EntityTypeMapping TypeName="DailyJobModel.AdminSetting">
+            <EntityTypeMapping TypeName="DailyJobModel.AdminSettings">
               <MappingFragment StoreEntitySet="AdminSettings">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -1149,7 +1237,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AdminSettingsTypesDescriptions">
-            <EntityTypeMapping TypeName="DailyJobModel.AdminSettingsTypesDescription">
+            <EntityTypeMapping TypeName="DailyJobModel.AdminSettingsTypesDescriptions">
               <MappingFragment StoreEntitySet="AdminSettingsTypesDescriptions">
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Decription" ColumnName="Decription" />
@@ -1157,7 +1245,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ClientCosts">
-            <EntityTypeMapping TypeName="DailyJobModel.ClientCost">
+            <EntityTypeMapping TypeName="DailyJobModel.ClientCosts">
               <MappingFragment StoreEntitySet="ClientCosts">
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="CostType" ColumnName="CostType" />
@@ -1167,7 +1255,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ClientServices">
-            <EntityTypeMapping TypeName="DailyJobModel.ClientService">
+            <EntityTypeMapping TypeName="DailyJobModel.ClientServices">
               <MappingFragment StoreEntitySet="ClientServices">
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
@@ -1175,7 +1263,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Couriers">
-            <EntityTypeMapping TypeName="DailyJobModel.Courier">
+            <EntityTypeMapping TypeName="DailyJobModel.Couriers">
               <MappingFragment StoreEntitySet="Couriers">
                 <ScalarProperty Name="CourierId" ColumnName="CourierId" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -1186,7 +1274,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CustomersChanges">
-            <EntityTypeMapping TypeName="DailyJobModel.CustomersChanx">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomersChanges">
               <MappingFragment StoreEntitySet="CustomersChanges">
                 <ScalarProperty Name="ChangeNumber" ColumnName="ChangeNumber" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
@@ -1199,7 +1287,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CustomersReports">
-            <EntityTypeMapping TypeName="DailyJobModel.CustomersReport">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomersReports">
               <MappingFragment StoreEntitySet="CustomersReports">
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="ReportId" ColumnName="ReportId" />
@@ -1207,7 +1295,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CustomerTimes">
-            <EntityTypeMapping TypeName="DailyJobModel.CustomerTime">
+            <EntityTypeMapping TypeName="DailyJobModel.CustomerTimes">
               <MappingFragment StoreEntitySet="CustomerTimes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
@@ -1217,16 +1305,31 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DeletionReasons">
+            <EntityTypeMapping TypeName="DailyJobModel.DeletionReasons">
+              <MappingFragment StoreEntitySet="DeletionReasons">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Firms">
-            <EntityTypeMapping TypeName="DailyJobModel.Firm">
+            <EntityTypeMapping TypeName="DailyJobModel.Firms">
               <MappingFragment StoreEntitySet="Firms">
                 <ScalarProperty Name="FirmId" ColumnName="FirmId" />
                 <ScalarProperty Name="FirmName" ColumnName="FirmName" />
+                <ScalarProperty Name="PIB" ColumnName="PIB" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="LegalId" ColumnName="LegalId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Offers">
-            <EntityTypeMapping TypeName="DailyJobModel.Offer">
+            <EntityTypeMapping TypeName="DailyJobModel.Offers">
               <MappingFragment StoreEntitySet="Offers">
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
                 <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
@@ -1248,11 +1351,13 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
                 <ScalarProperty Name="MakeRent" ColumnName="MakeRent" />
                 <ScalarProperty Name="CompanyType" ColumnName="CompanyType" />
                 <ScalarProperty Name="CompanySubType" ColumnName="CompanySubType" />
+                <ScalarProperty Name="MakeRentType" ColumnName="MakeRentType" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PossibleCreations">
-            <EntityTypeMapping TypeName="DailyJobModel.PossibleCreation">
+            <EntityTypeMapping TypeName="DailyJobModel.PossibleCreations">
               <MappingFragment StoreEntitySet="PossibleCreations">
                 <ScalarProperty Name="CreationId" ColumnName="CreationId" />
                 <ScalarProperty Name="JobType" ColumnName="JobType" />
@@ -1274,19 +1379,20 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
                 <ScalarProperty Name="PIB" ColumnName="PIB" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="CompanySubType" ColumnName="CompanySubType" />
+                <ScalarProperty Name="JobDone" ColumnName="JobDone" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ReportTypes">
-            <EntityTypeMapping TypeName="DailyJobModel.ReportType">
-              <MappingFragment StoreEntitySet="ReportTypes">
-                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
-                <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+          <EntitySetMapping Name="RelatedCustomers">
+            <EntityTypeMapping TypeName="DailyJobModel.RelatedCustomers">
+              <MappingFragment StoreEntitySet="RelatedCustomers">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="RelatedCustomerId" ColumnName="RelatedCustomerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Services">
-            <EntityTypeMapping TypeName="DailyJobModel.Service">
+            <EntityTypeMapping TypeName="DailyJobModel.Services">
               <MappingFragment StoreEntitySet="Services">
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
@@ -1297,7 +1403,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Teams">
-            <EntityTypeMapping TypeName="DailyJobModel.Team">
+            <EntityTypeMapping TypeName="DailyJobModel.Teams">
               <MappingFragment StoreEntitySet="Teams">
                 <ScalarProperty Name="TeamID" ColumnName="TeamID" />
                 <ScalarProperty Name="TeamName" ColumnName="TeamName" />
@@ -1306,7 +1412,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Times">
-            <EntityTypeMapping TypeName="DailyJobModel.Time">
+            <EntityTypeMapping TypeName="DailyJobModel.Times">
               <MappingFragment StoreEntitySet="Times">
                 <ScalarProperty Name="TimeId" ColumnName="TimeId" />
                 <ScalarProperty Name="TimeDescription" ColumnName="TimeDescription" />
@@ -1315,7 +1421,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Traces">
+          <EntitySetMapping Name="Trace">
             <EntityTypeMapping TypeName="DailyJobModel.Trace">
               <MappingFragment StoreEntitySet="Trace">
                 <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
@@ -1340,7 +1446,7 @@ warning 6002: The table/view 'DailyJob.dbo.Trace' does not have a primary key de
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

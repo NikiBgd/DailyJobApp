@@ -545,7 +545,7 @@ namespace DailyJobStarterPack.Controllers
         }
 
         [HttpPost]
-        public ActionResult InsertNewReport(List<InsertNewReportInputModel> report)
+        public ActionResult InsertNewReport(string reportName, List<InsertNewReportInputModel> report)
         {
             var mappedReport = new List<ColumnReport>();
             if(report != null)
@@ -565,7 +565,7 @@ namespace DailyJobStarterPack.Controllers
                 }
             }
 
-            ReportCMSLibrary.ReportCMSUtility.InsertNewReport(mappedReport);
+            ReportCMSUtility.InsertNewReport(reportName, mappedReport);
 
             return View();
         }

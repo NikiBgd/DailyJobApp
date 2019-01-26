@@ -8,11 +8,13 @@ namespace ReportCMSLibrary
 {
     public static class ReportCMSUtility
     {
-        public static void InsertNewReport (List<ColumnReport> report)
+        public static void InsertNewReport (string reportName, List<ColumnReport> report)
         {
+            var reportId = -1;
+
             if (report != null)
             {
-                var reportId = GetLastReportId() + 1;
+                reportId = GetLastReportId() + 1;
 
                 foreach (var column in report)
                 {
@@ -99,25 +101,27 @@ namespace ReportCMSLibrary
                     }
                 }
             }
+
+            InsertNewReportName(reportName, reportId);
         }
 
         public static void HandleReportsForNewCustomer (int customerId)
         {
             using (var context = new DailyJobEntities())
             {
-                var reportIds = context.ReportDatas.DistinctBy(x => x.ReportID).Select(x => x.ReportID).ToList();
+                var reportIds = context.ReportData.DistinctBy(x => x.ReportID).Select(x => x.ReportID).ToList();
                 if (reportIds != null)
                 {
                     foreach (var id in reportIds)
                     {
-                        var reportData = context.ReportDatas.Where(x => x.ReportID == id).FirstOrDefault();
+                        var reportData = context.ReportData.Where(x => x.ReportID == id).FirstOrDefault();
                         var year = reportData.Year;
                         var clientId = reportData.ClientID;
 
-                        var uniqueReportData = context.ReportDatas.Where(x => x.ReportID == id && x.Year == year && x.ClientID == clientId).ToList();
+                        var uniqueReportData = context.ReportData.Where(x => x.ReportID == id && x.Year == year && x.ClientID == clientId).ToList();
                         var objectForInsert = PrepareReportShemaObject(uniqueReportData, customerId);
 
-                        context.ReportDatas.AddRange(objectForInsert);
+                        context.ReportData.AddRange(objectForInsert);
                         context.SaveChanges();
                     }
                 }
@@ -128,19 +132,19 @@ namespace ReportCMSLibrary
         {
             using (var context = new DailyJobEntities())
             {
-                var report = context.ReportDatas.Where(x => x.ReportID == reportId).ToList();
+                var report = context.ReportData.Where(x => x.ReportID == reportId).ToList();
 
                 if (report != null)
                 {
-                    context.ReportDatas.RemoveRange(report);
+                    context.ReportData.RemoveRange(report);
                     context.SaveChanges();
                 }
             }
         }
 
-        public static List<ReportType> GetAllReports()
+        public static List<ReportTypes> GetAllReports()
         {
-            var reports = new List<ReportType>();
+            var reports = new List<ReportTypes>();
 
             using (var context = new DailyJobEntities())
             {
@@ -150,6 +154,20 @@ namespace ReportCMSLibrary
             return reports;
         }
 
+        private static void InsertNewReportName(string reportName, int reportId)
+        {
+            using (var context = new DailyJobEntities())
+            {
+                var report = new ReportTypes
+                {
+                    ReportId = reportId,
+                    ReportName = reportName
+                };
+
+                context.ReportTypes.Add(report);
+                context.SaveChanges();
+            }
+        }
 
         private static List<ReportData> PrepareReportShemaObject (List<ReportData> reportData, int clientId)
         {
@@ -167,7 +185,7 @@ namespace ReportCMSLibrary
                         Month = report.Month,
                         Ordering = report.Ordering,
                         MonthlyPeriod = report.MonthlyPeriod,
-                        ReportDataType = report.ReportDataType,
+                        ReportDataTypes = report.ReportDataTypes,
                         ReportID = report.ReportID,
                         TypeID = report.TypeID,
                         Year = report.Year,
@@ -189,7 +207,7 @@ namespace ReportCMSLibrary
 
             using (var context = new DailyJobEntities())
             {
-                maxReportId = context.ReportDatas.Max(x => x.ReportID);
+                maxReportId = context.ReportData.Max(x => x.ReportID);
             }
 
             return maxReportId;

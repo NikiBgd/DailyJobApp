@@ -12,9 +12,10 @@ namespace ReportCMSLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class ReportType
+    public partial class Teams
     {
-        public int ReportId { get; set; }
-        public string ReportName { get; set; }
+        public int TeamID { get; set; }
+        public string TeamName { get; set; }
+        public int TeamLeaderId { get; set; }
     }
 }
