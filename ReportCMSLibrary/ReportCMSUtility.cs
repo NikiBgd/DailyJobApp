@@ -133,10 +133,11 @@ namespace ReportCMSLibrary
             using (var context = new DailyJobEntities())
             {
                 var report = context.ReportData.Where(x => x.ReportID == reportId).ToList();
-
+                var reportType = context.ReportTypes.FirstOrDefault(x => x.ReportId == reportId);
                 if (report != null)
                 {
                     context.ReportData.RemoveRange(report);
+                    context.ReportTypes.Remove(reportType);
                     context.SaveChanges();
                 }
             }

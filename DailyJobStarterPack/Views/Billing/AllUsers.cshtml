@@ -1,5 +1,7 @@
 ﻿@using DataBaseCommunication.DataBaseObjects
 @using DailyJobStarterPack.DataBaseObjects
+@using DailyJobStarterPack.Web.ViewModels.Security
+
 @{
     var clientsBillings = ViewData["clientsBillings"] as Dictionary<long, List<Billing>>;
     var clients = ViewData["clients"] as List<ClientProfile>;
@@ -27,6 +29,8 @@
     {
         diffBetweenMonths = 1;
     }
+
+    var totalNumber = clients.Count;
 }
 
 
@@ -35,7 +39,11 @@
 
 <br />
 <br />
-
+<div class="form-group">
+    <div>
+        <a class="btn btn-info create-bill" href="#">Kreiraj vanrednu fakturu</a>
+    </div>
+</div>
 <div class="form-group">
     <div>
         <a class="btn btn-info" href="@Url.Action("AllUsers", "Billing")?year=@year&period=1">Mesecni prikaz</a>
@@ -71,14 +79,61 @@
 
             @for (int i = start; i <= end; i++)
             {
-                <th>@(monthsName[i - 1]) <input class="js-month-value" type="checkbox" name="Month_@i" data-month="@i" data-year="@year"><br></th>
+                var totalPaidForMonth = 0;
+                decimal amountTotal = 0;
+                decimal amountPaid = 0;
+                foreach (var bilList in clientsBillings)
+                {
+                    var a = bilList.Value;
+                    var b = a.Count(x => x.Month == i && x.Year == year && x.Paid);
+                    totalPaidForMonth += b;
+
+                    var client = SessionData.Clients.FirstOrDefault(x => x.CustomerID == bilList.Key);
+                    amountTotal += client.LocalAmount;
+                    if (b == 1)
+                    {
+                        amountPaid += client.LocalAmount;
+                    }
+                }
+
+                var color = "";
+                if (totalPaidForMonth != totalNumber)
+                {
+                    if (DateTime.Now < new DateTime(DateTime.Now.Year, DateTime.Now.Month, secondWarningDeadline))
+                    {
+                        color = "yellow";
+                    }
+                    else
+                    {
+                        color = "LightSalmon";
+                    }
+                }
+                else
+                {
+                    color = "lightgreen";
+                }
+
+                <th style="@string.Format("background-color: {0}", color)">@(monthsName[i - 1]) <input class="js-month-value" type="checkbox" name="Month_@i" data-month="@i" data-year="@year">
+                    <br>Ukupno @totalNumber - Placeno @totalPaidForMonth
+                    <br>Procenat: @(Math.Round((decimal)totalPaidForMonth/totalNumber, 2) * 100) %
+                    <br>Ukupan iznos: @amountTotal RSD
+                    <br>Naplaceni iznos: @amountPaid RSD
+                    <br>Preostalo: @(amountTotal - amountPaid)
+                </th>
             }
 
 
         </tr>
     </tbody>
     <tbody>
-
+        <tr>
+            <td></td>
+            <td></td>
+            @for (int i = start; i <= end; i++)
+            {
+                <td id="month-@i"></td>
+            }
+        </tr>
 
 
         @foreach (var client in clients)
@@ -93,12 +148,14 @@
                     </td>
                     <td>
                         <div><a href="@Url.Action("ClientBilling", "Billing")?year=@year&clientId=@client.CustomerID">@client.Name</a></div>
+                        <div>Cena: @SessionData.Clients.FirstOrDefault(x => x.CustomerID == client.CustomerID).Amount @SessionData.Clients.FirstOrDefault(x => x.CustomerID == client.CustomerID).AmountCode</div>
                     </td>
-
+                    
 
                     @for (int i = start; i <= end; i++)
                     {
                         var currentMonthBilling = clientBillings.Where(x => x.Month == i).FirstOrDefault();
+                        
                         if (currentMonthBilling != null)
                         {
                             <td>
@@ -129,6 +186,7 @@
                     </td>
                     <td>
                         <div><a href="@Url.Action("ClientBilling", "Billing")?year=@year&clientId=@client.CustomerID">@client.Name</a></div>
+                        <div>Cena: @SessionData.Clients.FirstOrDefault(x => x.CustomerID == client.CustomerID).Amount @SessionData.Clients.FirstOrDefault(x => x.CustomerID == client.CustomerID).AmountCode</div>
                     </td>
 
                     @if (hasRecords)
@@ -167,6 +225,7 @@
 </table>
 
 <div>
+    <a class="js-button-action btn btn-info" data-action-type="5" href="#">Posalji fakture</a>
     <a class="js-button-action btn btn-info" data-action-type="1" href="#">Platio</a>
     <a class="js-button-action btn btn-info" data-action-type="2" href="#">Nije Platio</a>
     <a class="js-button-action btn btn-info" data-action-type="3" href="#">Posalji Prvu opomenu</a>
@@ -181,8 +240,39 @@
     </div>
 </div>
 
+<!--popups-->
+<div id="modal-from-dom" class="modal hide overlay">
+<div class="popup">
+    <div class="modal-header">
+        <a href="#" data-dismiss="modal" class="close">&times;</a>
+        <h3>Izbor kompnaije</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <form action="@Url.Action("CreateBill", "Billing")" method="GET">
+                <label for="company">Odaberite kompaniju sa koje se vrsi fakurisanje</label>
+                <select class="form-control" id="company">
+                    @foreach (var firm in SessionData.Firms)
+                    {
+                        <option value="@firm.FirmId">@firm.FirmName</option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" data-dismiss="modal" class="btn secondary">Odustani</a>
+        <a href="" class="btn danger">Izaberi</a>
+    </div>
+</div>
+</div>
 
 <script>
+    $('.create-bill').on('click', function (e) {
+        e.preventDefault();
+        $('#modal-from-dom').modal('show').trigger('show');
+    });
+
     $(document).on("click", ".js-button-action", function (e) {
         e.preventDefault();
 
@@ -215,6 +305,7 @@
             }
         });
 
+
         var dataToSend = {
             ClientIds: clientChkbox,
             Months: monthsChkbox,
@@ -237,4 +328,7 @@
 
     });
 
+    $(document).ready(function () {
+        $(".js-client-id").attr('checked', true);
+    })
 </script>

@@ -25,7 +25,22 @@
         hasThirdCircle = (changeBeforeLast != null);
     }
 
-
+    var statusText = "";
+    switch (Model.Status)
+    {
+        case 0:
+            statusText = "Otkazao usluge"; break;
+        case 1:
+            statusText = "Aktivan"; break;
+        case 2:
+            statusText = "Ugasen"; break;
+        case 3:
+            statusText = "Likvidacija"; break;
+        case 4:
+            statusText = "Zamrznut"; break;
+        default:
+            break;
+    }
 }
 
 <!--POP UPS-->
@@ -391,6 +406,8 @@
                             <p><a href="@Url.Action("AllWorkerOrders", "Clients", new { clientId = Model.CustomerID})">Broj poseta kurira</a>: @Model.TotaCourierVisits</p>
                             <p>Broj mailova: @Model.TotalMailNumber</p>
                             <p>Broj minuta razgovora: @Model.TotalMinutesNumber</p>
+                            <p>Status: @statusText</p>
+                            <p>Datum promene statusa: @Model.StatusDate</p>
                         </div>
                         <div class="clearfix"></div>
                         <hr style="margin:5px 0 5px 0;">

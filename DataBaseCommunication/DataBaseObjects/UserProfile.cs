@@ -99,6 +99,7 @@ namespace DailyJobStarterPack.DataBaseObjects
         public int Status { get; set; }
         public int BillFirm { get; set; }
         public DateTime DateFrom { get; set; }
+        public DateTime StatusDate { get; set; }
         public DateTime DateTo { get; set; }
         public List<int> Reports { get; set; }
     }

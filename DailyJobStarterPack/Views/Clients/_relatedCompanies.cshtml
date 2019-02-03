@@ -2,18 +2,25 @@
 
 @model List<RelatedCompany>
 
-@foreach (var rComp in Model)
+@if (Model != null && Model.Any())
 {
+    foreach (var rComp in Model)
+    {
     <div class="row" style="margin-bottom: 15px;">
         <div class="col-sm-8">
             <a href="@Url.Action("Details", "Clients")?clientId=@rComp.RelatedCompanyId">@rComp.RelatedCompanyName</a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 delete-relation">
             <button class="btn btn-danger btn-xs confirm-delete-related-comp" data-comp-id="@Request.Params["clientId"]" data-rel-comp-id="@rComp.RelatedCompanyId">
                 <span class="glyphicon glyphicon-trash"></span> Obrisi
             </button>
         </div>
     </div>
+    }
+}
+else
+{
+    <p>Trenutno nema povezanih kompanija</p>
 }
 <div id="modal-from-dom-rel-comp" class="modal hide overlay">
     <div class="popup">

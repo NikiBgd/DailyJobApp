@@ -488,6 +488,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Status">Status</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-envelope-o"></i>
+                                </div>
+                                <select id="Status" name="Status" class="form-control">
+                                    <option value="0" @(Model.Status == 0 ? "selected" : "")>Otkazao usluge</option>
+                                    <option value="1" @(Model.Status == 1 ? "selected" : "")>Aktivan</option>
+                                    <option value="2" @(Model.Status == 2 ? "selected" : "")>Ugasen</option>
+                                    <option value="3" @(Model.Status == 3 ? "selected" : "")>Likvidacija</option>
+                                    <option value="4" @(Model.Status == 4 ? "selected" : "")>Zamrznut</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 }
 
                 <div class="form-group">

@@ -65,6 +65,7 @@ namespace DataBaseCommunication.DataProviders
             public const string DateFrom = "DateFrom";
             public const string DateTo = "DateTo";
             public const string Reports = "Reports";
+            public const string StatusDate = "StatusDate";
         }
 
         public static class ChangesFieldNames
@@ -152,6 +153,7 @@ namespace DataBaseCommunication.DataProviders
                     CourierDay = DataHelper.GetInteger(reader[ClientsFieldNames.CourierDay]),
                     TotaCourierVisits = DataHelper.GetInteger(reader[ClientsFieldNames.TotaCourierVisits]),
                     Status = DataHelper.GetInteger(reader[ClientsFieldNames.Status]),
+                    StatusDate = DataHelper.GetDateTime(reader[ClientsFieldNames.StatusDate]),
                     BillFirm = DataHelper.GetInteger(reader[ClientsFieldNames.BillFirm]),
                     DateFrom = DataHelper.GetDateTime(reader[ClientsFieldNames.DateFrom]),
                     DateTo = DataHelper.GetDateTime(reader[ClientsFieldNames.DateTo]),
@@ -993,7 +995,8 @@ namespace DataBaseCommunication.DataProviders
             AddInParameter(commandWrapper, "@BillFirm", DbType.Int32, request.Client.BillFirm);
             AddInParameter(commandWrapper, "@DateFrom", DbType.DateTime, request.Client.DateFrom);
             AddInParameter(commandWrapper, "@DateTo", DbType.DateTime, request.Client.DateTo);
-
+            AddInParameter(commandWrapper, "@Status", DbType.Int32, request.Client.Status);
+            AddInParameter(commandWrapper, "@UpdateStatusDate", DbType.Int16, request.Client.Status != request.OldClientProfile.Status ? 1 : 0);
 
 
             AddInParameter(commandWrapper, "@ERROR", DbType.String, 1000);

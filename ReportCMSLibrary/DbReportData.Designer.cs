@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Strale\Desktop\C#\DailyJob\DailyJobApp\ReportCMSLibrary\DbReportData.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\nikol\source\repos\DailyJobStarterPack\DailyJobApp\ReportCMSLibrary\DbReportData.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

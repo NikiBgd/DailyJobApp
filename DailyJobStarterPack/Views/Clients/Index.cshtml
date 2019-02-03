@@ -230,6 +230,12 @@
                                 }
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <button class="btn btn-xs btn-get-comp" data-comp-id="@client.CustomerID">Prikazi povezane kompanije</button>
+                                <div id="relatedCompanies-@client.CustomerID" style="margin-top:10px"></div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -311,4 +317,19 @@
         $("#popup1-extra-search").css("display", "none");
 
     }
+
+    $(".btn-get-comp").on("click", function () {
+        var companyId = $(this).attr("data-comp-id");
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRelatedCompanies", "Clients")",
+            data: { 'clientId': companyId },
+            success: function (result) {
+                $("#relatedCompanies-" + companyId).html(result);
+                $("#relatedCompanies-" + companyId).find(".delete-relation").remove();
+            },
+            error: function (result) {
+            }
+        });
+    });
 </script>
