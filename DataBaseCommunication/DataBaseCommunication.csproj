@@ -54,8 +54,10 @@
   <ItemGroup>
     <Compile Include="DataBaseObjects\Billing.cs" />
     <Compile Include="DataBaseObjects\ClientWarnings.cs" />
+    <Compile Include="DataBaseObjects\EmployeeWorkTempo.cs" />
     <Compile Include="DataBaseObjects\Task.cs" />
     <Compile Include="DataBaseObjects\UserProfile.cs" />
+    <Compile Include="DataBaseObjects\WorkTempoStatus.cs" />
     <Compile Include="DataProviders\Base\Provider.cs" />
     <Compile Include="DataProviders\BillingsProvider.cs" />
     <Compile Include="DataProviders\CreationsProvider.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="DataProviders\OffersProvider.cs" />
     <Compile Include="DataProviders\SettingsProvider.cs" />
     <Compile Include="DataProviders\UsersProvider.cs" />
+    <Compile Include="DataProviders\WorkTempoProvider.cs" />
     <Compile Include="Helpers\OffersHelper.cs" />
     <Compile Include="Helpers\CreationsHelper.cs" />
     <Compile Include="Helpers\ClientsHelper.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="Mappers\Interfaces\IOfferMapper.cs" />
     <Compile Include="Mappers\Interfaces\ISettingsMapper.cs" />
     <Compile Include="Mappers\Interfaces\IUsersMapper.cs" />
+    <Compile Include="Mappers\Interfaces\IWorkTempoMapper.cs" />
     <Compile Include="Mappers\OfferMapper.cs" />
     <Compile Include="Mappers\Requests\Billings\BillingsRequest.cs" />
     <Compile Include="Mappers\Requests\Clients\ClientsRequest.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Mappers\Requests\Request.cs" />
     <Compile Include="Mappers\Requests\Settings\AdminSettingsRequest.cs" />
     <Compile Include="Mappers\Requests\Users\UserRequest.cs" />
+    <Compile Include="Mappers\Requests\WorkTempo\WorkTempoRequest.cs" />
     <Compile Include="Mappers\Response\Billings\BillingsResponse.cs" />
     <Compile Include="Mappers\Response\Clients\ClientsResponse.cs" />
     <Compile Include="Mappers\Response\Creations\CurrentCreationsResponse.cs" />
@@ -93,9 +98,17 @@
     <Compile Include="Mappers\Response\Settings\AdminSettingsResponse.cs" />
     <Compile Include="Mappers\Response\Users\UserResponse.cs" />
     <Compile Include="Mappers\ClientsMapper.cs" />
+    <Compile Include="Mappers\Response\WorkTempo\WorkTempoResponse.cs" />
     <Compile Include="Mappers\SettingsMapper.cs" />
     <Compile Include="Mappers\UsersMapper.cs" />
     <Compile Include="Mappers\UsersMapperRequest.cs" />
+    <Compile Include="Mappers\WorkTempoMapper.cs" />
+    <Compile Include="Models\GetEmployeeWorkTempoBinding.cs" />
+    <Compile Include="Models\FormattedMonthlyStats.cs" />
+    <Compile Include="Models\GetEmployeesWorkTempoViewModel.cs" />
+    <Compile Include="Models\MonthlyStats.cs" />
+    <Compile Include="Models\MonthlyStatsBinding.cs" />
+    <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportData.cs" />
     <Compile Include="Services\BillingsService.cs" />
@@ -109,10 +122,12 @@
     <Compile Include="Services\Interface\ISettingsService.cs" />
     <Compile Include="Services\Interface\IUserService.cs" />
     <Compile Include="Services\ClientsService.cs" />
+    <Compile Include="Services\Interface\IWorkTempoService.cs" />
     <Compile Include="Services\OfferService.cs" />
     <Compile Include="Services\Offer\OffersSearchCriteria.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\WorkTempoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
